@@ -1,0 +1,7 @@
+{
+  "name": "road-tag",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
