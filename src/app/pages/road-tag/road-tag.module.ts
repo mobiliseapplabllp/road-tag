@@ -8,6 +8,7 @@ import { RoadTagPageRoutingModule } from './road-tag-routing.module';
 
 import { RoadTagPage } from './road-tag.page';
 import { ModalComponent } from '../modal/modal.component';
+import { GMapsComponent } from 'src/app/g-maps/g-maps.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { ModalComponent } from '../modal/modal.component';
     ReactiveFormsModule,
     RoadTagPageRoutingModule,
   ],
-  declarations: [RoadTagPage,ModalComponent]
+  declarations: [RoadTagPage,ModalComponent, GMapsComponent]
 })
 export class RoadTagPageModule {}

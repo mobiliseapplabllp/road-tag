@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ModalComponent } from '../modal/modal.component';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { ToastController } from '@ionic/angular';
+import { GMapsComponent } from 'src/app/g-maps/g-maps.component';
 
 @Component({
   selector: 'app-road-update',
@@ -21,7 +22,8 @@ export class RoadUpdatePage implements OnInit {
     private formBuilder: FormBuilder,
     private modal: ModalController,
     private router: Router,
-    private toast: ToastController
+    private toast: ToastController,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -57,43 +59,57 @@ export class RoadUpdatePage implements OnInit {
     console.log('Form data saved in local storage');
   }
 
-  async openMap(pointType: 'start' | 'end') {
-    const currentLat = pointType === 'start'
-      ? this.updateRoadForm.get('start_point_lat')?.value
-      : this.updateRoadForm.get('end_point_lat')?.value
-    
-    const currentLng = pointType === 'start'
-      ? this.updateRoadForm.get('start_point_long')?.value
-      : this.updateRoadForm.get('end_point_long')?.value
-
-    const currentAdd = this.updateRoadForm.get('address')?.value;  
-    const modal = await this.modal.create({
-      component: ModalComponent,
-      componentProps: {
-        pointType: pointType,
-        lat: currentLat,
-        lng: currentLng,
-        address:currentAdd,
+  async openModal() {
+    const modal = await this.modalCtrl.create({
+      component: GMapsComponent,
+      cssClass: 'my-modal',
+    });
+    modal.onWillDismiss().then(disModal => {
+      if (disModal.role) {
+        // this.addAsset.get('depart_name')?.setValue(disModal.data.department_name);
+        // this.addAsset.get('department')?.setValue(disModal.data.department_code);
       }
     });
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
-    if (data) {
-      if (pointType === 'start') {
-        this.updateRoadForm.patchValue({
-          start_point_lat: data.lat,
-          start_point_long: data.lng,
-          start_address: data.address
-        });
-      } else {
-        this.updateRoadForm.patchValue({
-          end_point_lat: data.lat,
-          end_point_long: data.lng,
-          end_address: data.address
-        });
-      }
-    }
+    modal.present();
   }
+
+  // async openMap(pointType: 'start' | 'end') {
+  //   const currentLat = pointType === 'start'
+  //     ? this.updateRoadForm.get('start_point_lat')?.value
+  //     : this.updateRoadForm.get('end_point_lat')?.value
+    
+  //   const currentLng = pointType === 'start'
+  //     ? this.updateRoadForm.get('start_point_long')?.value
+  //     : this.updateRoadForm.get('end_point_long')?.value
+
+  //   const currentAdd = this.updateRoadForm.get('address')?.value;  
+  //   const modal = await this.modal.create({
+  //     component: ModalComponent,
+  //     componentProps: {
+  //       pointType: pointType,
+  //       lat: currentLat,
+  //       lng: currentLng,
+  //       address:currentAdd,
+  //     }
+  //   });
+  //   await modal.present();
+  //   const { data } = await modal.onWillDismiss();
+  //   if (data) {
+  //     if (pointType === 'start') {
+  //       this.updateRoadForm.patchValue({
+  //         start_point_lat: data.lat,
+  //         start_point_long: data.lng,
+  //         start_address: data.address
+  //       });
+  //     } else {
+  //       this.updateRoadForm.patchValue({
+  //         end_point_lat: data.lat,
+  //         end_point_long: data.lng,
+  //         end_address: data.address
+  //       });
+  //     }
+  //   }
+  // }
   async photo(type: 'start' | 'end') {
     try {
       const image = await Camera.getPhoto({

@@ -37,15 +37,15 @@ export class RoadTagPage implements OnInit {
 
   initialForm() {
     this.addForm = this.formBuilder.group({
-      last_treatment_date: ['', Validators.required],
+      last_treatment_date: [''],
       dlp_expiry_date: [''],
       next_treatment_due: [''],
       startPhoto: [''],
       endPhoto: [''],
-      road_id: [''],
-      ur_id: [''],
+      road_id: ['', Validators.required],
+      ur_id: ['', Validators.required],
       road_name: [''],
-      source: [''],
+      source: ['', Validators.required],
       start_point_lat: [''],
       start_point_long: [''],
       end_point_lat: [''],

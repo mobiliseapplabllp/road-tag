@@ -38,37 +38,46 @@
 
 
 section.inputbox {
-    ion-text {
-      font-size: 14px;
-      font-weight: 550;    
+  ion-text {
+    font-size: 14px;  
+  }
+  ion-item {
+    margin: 5px 0px;
+    border:1px solid #D9E1EB;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size:90%;
+    background-color: white;
+    ion-icon {
+      margin-right:10px;
     }
-    ion-item {
-      margin: 5px 0px;
-      border:1px solid #4e4d4d;
-      border-radius: 4px;
-      font-weight: bold;
-      font-size:90%;
-      background-color: white;
-      ion-icon {
-        margin-right:10px;
-      }
-      ion-select {
-        width:100%
-      }
+    ion-select {
+      width:100%
     }
   }
-  :root {
-    --ion-color-primary: #2a295c;
-  }
-  .center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+}
 
-  .dsble{
-    background-color: rgb(234, 232, 232) !important;
-  }
+:root {
+  --ion-color-primary: #2a295c;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dsble{
+  background-color: rgb(234, 232, 232) !important;
+}
+
+.ion-card {
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+
+ion-content {
+  --background: rgb(231, 231, 231) !important;
+}
   
   
   // E0E0E0   gray

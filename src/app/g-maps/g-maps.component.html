@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Select Start and End Location</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar placeholder="Search city/road" (ionInput)="onSearch($event)"></ion-searchbar>
+  <div id="map1" style="height: 100%;width:100%"></div>    
+
+
+</ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col size="4">
+      <ion-button expand="block" color="success" (click)="setStartMode()">Start</ion-button>
+    </ion-col>
+    <ion-col size="4">
+      <ion-button expand="block" color="primary" (click)="closeModal()">Confirm</ion-button>
+    </ion-col>
+    <ion-col size="4">
+      <ion-button expand="block" color="danger" (click)="setEndMode()">End</ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>
+
