@@ -1,0 +1,105 @@
+<!-- <ion-content>
+  <div>
+    <div>
+
+    </div>
+    <div class="form">
+      <form [formGroup]="loginForms" autocomplete="off" (ngSubmit)="onLogin()"> 
+        <ion-list>
+          <ion-item>
+            <ion-input label="User ID" label-placement="floating" type="text" name="user_login" autocomplete="off"
+              formControlName="userId">
+            </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Password" label-placement="floating" type="password" name="user_pass"
+              autocomplete="new-password" formControlName="password">
+            </ion-input>
+          </ion-item>
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <ion-button type="submit">Login</ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button>Register</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-list>
+      </form>
+
+    </div>
+  </div>
+</ion-content> -->
+
+<ion-content class="center">
+  <div style="width:100%;height:100%;border-top:50vh solid var(--ion-color-primary);position: absolute;top:0px;z-index:-1"></div>
+  <div style="height:100%;width:100%" class="center">
+    <ion-card style="min-height:50vh;width:90vw;box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;padding:20px;z-index: 1">
+      <section style="width:100%" *ngIf="currentView === 'login' ">
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <img src="assets/icon/logo.jpg" style="height:100px;width:120px" alt="logo img">
+          </ion-col>
+        </ion-row>
+        <form [formGroup]="loginForms" mode="md">
+          <section class="inputbox">
+            <ion-text color="primary">USER ID</ion-text>
+            <ion-item lines="none">
+              <ion-icon name="person-outline" slot="start"></ion-icon>
+              <ion-input type="text" formControlName="username" placeholder="Username"> </ion-input>
+            </ion-item>
+          </section>
+
+          <section class="inputbox" >
+            <ion-text color="primary">PASSWORD </ion-text>
+            <ion-item lines="none">
+              <ion-icon name="key-outline" slot="start"></ion-icon>
+              <ion-input  formControlName="password" placeholder="Password" [type]="mypass ? 'password': 'text'"> </ion-input>
+              <ion-buttons slot="end">
+                <ion-button (click)="mypass = !mypass" slot="icon-only" color="primary">
+                  <ion-icon [name]="mypass ? 'eye-outline': 'eye-off-outline'" slot="icon-only"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+          </section>
+
+          <ion-row class="ion-margin-top">
+            <ion-col class="ion-no-padding">
+              <ion-button color="primary"  (click)="onLogin()" expand="block"  class="ion-text-capitalize">  Login <!--[disabled]="loginForms.invalid"     [disabled]="isLoading"-->
+                <ion-icon name="log-in-outline" slot="end" *ngIf="!isLoading"></ion-icon>
+                <ion-spinner color="danger" slot="end" *ngIf="isLoading"></ion-spinner>
+              </ion-button>
+            </ion-col>
+          </ion-row>          
+        </form>
+      </section>
+
+      <section *ngIf="currentView === 'otp' ">
+        <ion-button  mode="ios" class="ion-no-padding"><!--fill="clear" (click)="currentView = 'login'"-->
+          <ion-icon name="chevron-back-outline" ></ion-icon>Back
+        </ion-button>
+        <h3>
+          <ion-text color="primary">Multi-Factor Authentication</ion-text>
+        </h3>
+        <p>
+          <ion-text color="primary"></ion-text><!--{{sendMobileMsg}}-->
+        </p>
+        <br>
+        <ion-row>
+          <ion-col class="center">
+            <!-- <ng-otp-input (onInputChange)="changeOtp($event)" [config]="otpConfig"></ng-otp-input>-->
+          </ion-col>
+        </ion-row>        
+        <br>
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <ion-button expand="block" fill="solid" class="ion-text-capitalie" >Submit Code </ion-button><!--(click)="verifyOtp()"-->
+          </ion-col>
+        </ion-row>
+      </section>
+    </ion-card>
+  </div>
+  <div style="width:100%;position: absolute;bottom:0px;padding-bottom:10px;z-index:0;font-size:20px" class="center">Powered by&nbsp;<ion-text color="primary">mObilise</ion-text> </div>
+</ion-content> 

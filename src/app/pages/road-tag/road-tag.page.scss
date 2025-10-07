@@ -1,0 +1,14 @@
+  .custom-border {
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    padding: 0.5em;
+    width: 100%;
+  }
+  
+  .custom-select {
+    --padding-start: 0.5em;
+    --padding-end: 0.5em;
+    --padding-top: 0.5em;
+    --padding-bottom: 0.5em;
+    min-height: 30px;
+}

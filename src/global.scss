@@ -34,4 +34,41 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+// @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+section.inputbox {
+    ion-text {
+      font-size: 14px;
+      font-weight: 550;    
+    }
+    ion-item {
+      margin: 5px 0px;
+      border:1px solid #4e4d4d;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size:90%;
+      background-color: white;
+      ion-icon {
+        margin-right:10px;
+      }
+      ion-select {
+        width:100%
+      }
+    }
+  }
+  :root {
+    --ion-color-primary: #2a295c;
+  }
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dsble{
+    background-color: rgb(234, 232, 232) !important;
+  }
+  
+  
+  // E0E0E0   gray
