@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>Select Start and End Location</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="closeModal()">
+      <ion-button (click)="closeModal(null, 'false')">
         <ion-icon name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -13,10 +13,49 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar placeholder="Search city/road" (ionInput)="onSearch($event)"></ion-searchbar>
+  <ion-searchbar placeholder="Search city/road" debounce="1500" (ionInput)="onSearch($event)"></ion-searchbar>
   <div id="map1" style="height: 100%;width:100%"></div>    
-
-
+  <ion-modal class="myModal" [isOpen]="isModalOpen" [initialBreakpoint]="1" [breakpoints]="[1]" (willDismiss)="onWillDismiss()">
+    <ng-template>
+      <ion-content class="ion-padding" style="--background:white">
+        <fieldset style="border-radius: 10px;">
+          <legend>Start Location</legend>
+          <ion-row>
+            <ion-col size="6">
+              <ion-text color="dark">Latitude</ion-text><br>
+              <ion-text>{{startLatLng.lat}}</ion-text>
+            </ion-col>
+            <ion-col size="6">
+              <ion-text color="dark">Longitude</ion-text><br>
+              <ion-text>{{startLatLng.lng}}</ion-text>
+            </ion-col>
+            <ion-col size="12">
+              <ion-text color="dark">Address</ion-text><br>
+              <ion-text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque doloremque provident alias minus repellendus fugit perferendis expedita eos, eius dolor veniam, amet hic harum maiores iure animi, cum quod! Reiciendis.</ion-text>
+            </ion-col>
+          </ion-row>
+        </fieldset>
+        <br>
+        <fieldset style="border-radius: 10px;">
+          <legend>End Location</legend>
+          <ion-row>
+            <ion-col size="6">
+              <ion-text color="dark">Latitude</ion-text><br>
+              <ion-text>{{endLatLng.lat}}</ion-text>
+            </ion-col>
+            <ion-col size="6">
+              <ion-text color="dark">Longitude</ion-text><br>
+              <ion-text>{{endLatLng.lng}}</ion-text>
+            </ion-col>
+            <ion-col size="12">
+              <ion-text color="dark">Address</ion-text><br>
+              <ion-text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque doloremque provident alias minus repellendus fugit perferendis expedita eos, eius dolor veniam, amet hic harum maiores iure animi, cum quod! Reiciendis.</ion-text>
+            </ion-col>
+          </ion-row>
+        </fieldset>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 <ion-footer>
   <ion-row>
@@ -24,11 +63,12 @@
       <ion-button expand="block" color="success" (click)="setStartMode()">Start</ion-button>
     </ion-col>
     <ion-col size="4">
-      <ion-button expand="block" color="primary" (click)="closeModal()">Confirm</ion-button>
+      <ion-button expand="block" color="primary" (click)="confirmModal()">Confirm</ion-button>
     </ion-col>
     <ion-col size="4">
       <ion-button expand="block" color="danger" (click)="setEndMode()">End</ion-button>
     </ion-col>
   </ion-row>
 </ion-footer>
+
 

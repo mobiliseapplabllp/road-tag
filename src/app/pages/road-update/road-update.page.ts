@@ -6,6 +6,7 @@ import { ModalComponent } from '../modal/modal.component';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { ToastController } from '@ionic/angular';
 import { GMapsComponent } from 'src/app/g-maps/g-maps.component';
+import { Api } from 'src/app/provider/api';
 
 @Component({
   selector: 'app-road-update',
@@ -23,11 +24,18 @@ export class RoadUpdatePage implements OnInit {
     private modal: ModalController,
     private router: Router,
     private toast: ToastController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private httpApi: Api
   ) { }
 
   ngOnInit() {
     this.initialForm();
+    this.getApi();
+  }
+
+  getApi() {
+    // this.httpApi.getDirections('faridabad', 'noida').subscribe();
+    this.httpApi.getDirections('28.510543263855247, 77.29847171803526', '28.511042862603688, 77.29824246473908').subscribe();
   }
 
   initialForm() {

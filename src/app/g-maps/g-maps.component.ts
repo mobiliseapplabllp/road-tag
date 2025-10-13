@@ -19,7 +19,7 @@ export class GMapsComponent implements OnInit {
   mode: 'start' | 'end' = 'start';
   autocompleteService: any;
   geocoder: any;
-
+  isModalOpen = false;
   constructor(private modalCtrl: ModalController, private zone: NgZone) { }
 
   ngOnInit() {
@@ -95,13 +95,33 @@ export class GMapsComponent implements OnInit {
     });
   }
 
-  closeModal() {
+  confirmModal() {
     console.log(this.startLatLng);
     console.log(this.endLatLng);
-    return
-    this.modalCtrl.dismiss({
-      start: this.startLatLng,
-      end: this.endLatLng
-    });
+    if (!this.startLatLng) {
+      alert('Please Select Start Location');      
+      return;
+    }
+    if (!this.endLatLng) {
+      alert('Please Select End Location');
+      return;
+    }
+    this.isModalOpen = true;
+  }
+
+
+  closeModal(data: any, status: any) {
+    this.modalCtrl.dismiss(data, status);
+    // console.log(this.startLatLng);
+    // console.log(this.endLatLng);
+    // return
+    // this.modalCtrl.dismiss({
+    //   start: this.startLatLng,
+    //   end: this.endLatLng
+    // });
+  }
+
+  onWillDismiss() {
+    this.isModalOpen = false; 
   }
 }
