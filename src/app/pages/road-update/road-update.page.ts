@@ -33,8 +33,7 @@ export class RoadUpdatePage implements OnInit {
     this.getApi();
   }
 
-  getApi() {
-    // this.httpApi.getDirections('faridabad', 'noida').subscribe();
+  getApi() {    
     this.httpApi.getDirections('28.510543263855247, 77.29847171803526', '28.511042862603688, 77.29824246473908').subscribe();
   }
 
