@@ -35,12 +35,12 @@ export class RoadUpdatePage implements OnInit {
       road_iD: ['', [Validators.required]],
       start_point_lat: [''],
       start_point_long: [''],
-      start_address: [''], 
+      start_address: ['ABXUSUUS'], 
       end_point_lat: [''],
       end_point_long: [''],
       startPhoto: [''],
       endPhoto: [''],
-      end_address: [''], 
+      end_address: ['jxdjdsndfi'], 
       road_name: [''],
      
     })
@@ -56,7 +56,7 @@ export class RoadUpdatePage implements OnInit {
     formData.road_id = formData.road_iD;
     delete formData.road_iD;
     localStorage.setItem('updatedFormData', JSON.stringify(formData));
-    console.log('Form data saved in local storage');
+   
   }
 
   async openModal() {
@@ -64,13 +64,19 @@ export class RoadUpdatePage implements OnInit {
       component: GMapsComponent,
       cssClass: 'my-modal',
     });
-    modal.onWillDismiss().then(disModal => {
-      if (disModal.role) {
-        // this.addAsset.get('depart_name')?.setValue(disModal.data.department_name);
-        // this.addAsset.get('department')?.setValue(disModal.data.department_code);
+    modal.onWillDismiss().then((disModal) => {
+      if (disModal.role === 'confirm' && disModal.data) {
+        const { startLatLng, endLatLng } = disModal.data;
+        console.log('Received from GMaps:', startLatLng, endLatLng);
+        this.updateRoadForm.patchValue({
+          start_point_lat: startLatLng.lat,
+          start_point_long: startLatLng.lng,
+          end_point_lat: endLatLng.lat,
+          end_point_long: endLatLng.lng,
+        });
       }
     });
-    modal.present();
+    await modal.present();
   }
 
   // async openMap(pointType: 'start' | 'end') {

@@ -9,7 +9,7 @@ declare var google: any;
   styleUrls: ['./g-maps.component.scss'],
   standalone: false
 })
-export class GMapsComponent implements OnInit {
+export class  GMapsComponent implements OnInit {
   map: any;
   startMarker: any;
   endMarker: any;
@@ -19,6 +19,7 @@ export class GMapsComponent implements OnInit {
   mode: 'start' | 'end' = 'start';
   autocompleteService: any;
   geocoder: any;
+  isModalOpen = false;
 
   constructor(private modalCtrl: ModalController, private zone: NgZone) { }
 
@@ -94,14 +95,41 @@ export class GMapsComponent implements OnInit {
       }
     });
   }
-
-  closeModal() {
-    console.log(this.startLatLng);
-    console.log(this.endLatLng);
-    return
-    this.modalCtrl.dismiss({
-      start: this.startLatLng,
-      end: this.endLatLng
-    });
+  setOpen(isOpen: boolean, shouldConfirm: boolean = false) {
+    this.isModalOpen = isOpen;
+    
+    if (!isOpen && shouldConfirm) {
+      // Close inline modal and dismiss parent modal with data
+      this.confirmLocation();
+    }
+    
+    if (!isOpen) {
+      console.log('Start Location:', this.startLatLng);
+      console.log('End Location:', this.endLatLng);
+    }
   }
+    
+  confirmLocation() {
+    if (this.startLatLng && this.endLatLng) {
+      this.modalCtrl.dismiss({
+        startLatLng: this.startLatLng,
+        endLatLng: this.endLatLng
+      });
+      setTimeout(() => {
+        this.closeModal();
+      }, 1000);
+      
+    } else {
+      console.warn('Please select both start and end locations');
+    }
+  }
+  
+  closeModal() {
+    this.isModalOpen = false;
+    this.modalCtrl.dismiss();
+    console.log('Error aa rha hai')
+  }
+  
 }
+  
+
