@@ -29,7 +29,6 @@ export class RoadTagPage implements OnInit {
     if (storedDataStr) {
       this.updatedFormData = JSON.parse(storedDataStr);
       console.log('Stored Data:', this.updatedFormData);
-  
       this.verifyId(); 
     }
   }
@@ -92,8 +91,8 @@ export class RoadTagPage implements OnInit {
   }
 
   verifyId() {
-    const enteredRoadId = this.addForm.get('road_id')?.value;
-    if (this.updatedFormData.road_id === enteredRoadId) {
+    const enteredRoadName = this.addForm.get('road_name')?.value;
+    if (this.updatedFormData.road_name === enteredRoadName) {
       this.addForm.patchValue({
         ...this.updatedFormData
       });

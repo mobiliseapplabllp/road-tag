@@ -6,6 +6,8 @@ import { ModalComponent } from '../modal/modal.component';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { ToastController } from '@ionic/angular';
 import { GMapsComponent } from 'src/app/g-maps/g-maps.component';
+import { Api } from 'src/app/provider/api';
+import { RoadTag } from 'src/app/provider/road-tag';
 
 @Component({
   selector: 'app-road-update',
@@ -18,31 +20,39 @@ export class RoadUpdatePage implements OnInit {
   photos: { start?: string; end?: string } = {};
   startPhoto: any = '';
   endPhoto: any = '';
+  tempObj: any = {};
+
   constructor(
     private formBuilder: FormBuilder,
     private modal: ModalController,
     private router: Router,
     private toast: ToastController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private httpApi: Api,
+    private httpRoad: RoadTag,
   ) { }
 
   ngOnInit() {
     this.initialForm();
+    this.getApi();
+  }
+
+  getApi() {
+    this.httpApi.getDirections('28.510543263855247, 77.29847171803526', '28.511042862603688, 77.29824246473908').subscribe();
   }
 
   initialForm() {
     this.updateRoadForm = this.formBuilder.group({
       road_iD: ['', [Validators.required]],
+      road_name: [''],
       start_point_lat: [''],
       start_point_long: [''],
-      start_address: ['ABXUSUUS'], 
+      start_address: [''],
       end_point_lat: [''],
       end_point_long: [''],
+      end_address: [''],
       startPhoto: [''],
       endPhoto: [''],
-      end_address: ['jxdjdsndfi'], 
-      road_name: [''],
-     
     })
   }
   submitForm() {
@@ -52,11 +62,25 @@ export class RoadUpdatePage implements OnInit {
       this.showToast('Fill the required field', 'danger')
       return;
     }
-    const formData = this.updateRoadForm.value;
-    formData.road_id = formData.road_iD;
-    delete formData.road_iD;
-    localStorage.setItem('updatedFormData', JSON.stringify(formData));
-   
+    const formData = { ...this.updateRoadForm.value };
+    console.log('Form Data:', formData);
+    this.httpRoad.updateRoad(formData).subscribe({
+      next: (res) => {
+        console.log('API Response:', res);
+        this.showToast('Road Updated Successfully', 'success');
+        this.updateRoadForm.reset();
+        this.startPhoto = '';
+        this.endPhoto = '';
+        this.tempObj = {};
+      },
+       error: (err) => {
+        console.error('API Error:', err);
+        this.showToast('Failed to update road','danger');
+      },
+      complete: () => {
+        this.router.navigateByUrl('/road-tag');
+      }
+    });
   }
 
   async openModal() {
@@ -73,71 +97,45 @@ export class RoadUpdatePage implements OnInit {
           start_point_long: startLatLng.lng,
           end_point_lat: endLatLng.lat,
           end_point_long: endLatLng.lng,
+          start_address: startLatLng.address,
+          end_address: endLatLng.address,
         });
+        this.tempObj.start = startLatLng;
+        this.tempObj.end = endLatLng;
+        console.log('Temporary Object:', this.tempObj);
       }
     });
     await modal.present();
   }
 
-  // async openMap(pointType: 'start' | 'end') {
-  //   const currentLat = pointType === 'start'
-  //     ? this.updateRoadForm.get('start_point_lat')?.value
-  //     : this.updateRoadForm.get('end_point_lat')?.value
-    
-  //   const currentLng = pointType === 'start'
-  //     ? this.updateRoadForm.get('start_point_long')?.value
-  //     : this.updateRoadForm.get('end_point_long')?.value
-
-  //   const currentAdd = this.updateRoadForm.get('address')?.value;  
-  //   const modal = await this.modal.create({
-  //     component: ModalComponent,
-  //     componentProps: {
-  //       pointType: pointType,
-  //       lat: currentLat,
-  //       lng: currentLng,
-  //       address:currentAdd,
-  //     }
-  //   });
-  //   await modal.present();
-  //   const { data } = await modal.onWillDismiss();
-  //   if (data) {
-  //     if (pointType === 'start') {
-  //       this.updateRoadForm.patchValue({
-  //         start_point_lat: data.lat,
-  //         start_point_long: data.lng,
-  //         start_address: data.address
-  //       });
-  //     } else {
-  //       this.updateRoadForm.patchValue({
-  //         end_point_lat: data.lat,
-  //         end_point_long: data.lng,
-  //         end_address: data.address
-  //       });
-  //     }
-  //   }
-  // }
   async photo(type: 'start' | 'end') {
     try {
       const image = await Camera.getPhoto({
         quality: 60,
-        allowEditing: true,
+        allowEditing: false,
         width: 800,
         height: 600,
-        resultType: CameraResultType.DataUrl
+        resultType: CameraResultType.Uri
       });
-      const photoData = image.dataUrl;
+
+      const response = await fetch(image.webPath!);
+      const blob = await response.blob();
+      const previewUrl = URL.createObjectURL(blob);
+
       if (type === 'start') {
-        this.updateRoadForm.patchValue({ startPhoto: photoData });
-        this.startPhoto = true
+        this.updateRoadForm.patchValue({ startPhoto: blob });
+        this.startPhoto = previewUrl;
       } else {
-        this.updateRoadForm.patchValue({ endPhoto: photoData });
-        this.endPhoto = true
+        this.updateRoadForm.patchValue({ endPhoto: blob });
+        this.endPhoto = previewUrl;
       }
-      console.log('Photo captured:', type);
+
+      console.log('Photo captured:', type, blob);
     } catch (err) {
       console.error('Camera error:', err);
     }
   }
+
 
   async showToast(message: string, color: 'success' | 'danger') {
     const toast = await this.toast.create({

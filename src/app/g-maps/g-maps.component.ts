@@ -1,5 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController,Platform } from '@ionic/angular';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@awesome-cordova-plugins/native-geocoder/ngx';
+import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 
 declare var google: any;
 
@@ -9,7 +11,7 @@ declare var google: any;
   styleUrls: ['./g-maps.component.scss'],
   standalone: false
 })
-export class  GMapsComponent implements OnInit {
+export class GMapsComponent implements OnInit {
   map: any;
   startMarker: any;
   endMarker: any;
@@ -20,24 +22,48 @@ export class  GMapsComponent implements OnInit {
   autocompleteService: any;
   geocoder: any;
   isModalOpen = false;
+  startAddress: any = [];
+  endAddress: any = [];
+  latitude: number = 19.076;  
+  longitude: number = 72.8777;
 
-  constructor(private modalCtrl: ModalController, private zone: NgZone) { }
+  constructor(
+    private modalCtrl: ModalController,
+    private zone: NgZone,
+    private nativeGeocoder: NativeGeocoder,
+    private geolocation: Geolocation,
+    private platform: Platform,  
+  ) { }
 
+ 
   ngOnInit() {
     setTimeout(() => {
-      this.initMap();
-      // this.autocompleteService = new google.maps.places.AutocompleteService();
+      if (this.platform.is('capacitor')) {
+        this.getLocation();  
+      } else {
+        this.initMap(this.latitude, this.longitude);  
+      }
+      
       if (typeof google !== 'undefined' && google.maps && google.maps.places) {
         this.autocompleteService = new google.maps.places.AutocompleteService();
       } else {
         console.error('Google Maps JS not loaded yet!');
       }
       this.geocoder = new google.maps.Geocoder();
-    }, 1000);    
+    }, 1000);
+  }
+  async getLocation() {
+    await this.geolocation.getCurrentPosition({enableHighAccuracy: true}).then((res: any) => {
+      this.latitude = res.coords.latitude;
+      this.longitude = res.coords.longitude;
+      this.initMap(this.latitude, this.longitude);
+    }, (err: any) => {
+      alert(JSON.stringify(err) + ' Err');
+    });
   }
 
-  initMap() {
-    const defaultCenter = { lat: 19.076, lng: 72.8777 };
+  initMap(lat: number, lng: number) {
+    const defaultCenter = { lat: lat, lng: lng };
     this.map = new google.maps.Map(document.getElementById('map1') as HTMLElement, {
       center: defaultCenter,
       zoom: 10,
@@ -95,41 +121,69 @@ export class  GMapsComponent implements OnInit {
       }
     });
   }
-  setOpen(isOpen: boolean, shouldConfirm: boolean = false) {
-    this.isModalOpen = isOpen;
-    
-    if (!isOpen && shouldConfirm) {
-      // Close inline modal and dismiss parent modal with data
-      this.confirmLocation();
+
+  confirmModal() {
+    console.log(this.startLatLng);
+    console.log(this.endLatLng);
+    if (!this.startLatLng) {
+      alert('Please Select Start Location');
+      return;
     }
-    
-    if (!isOpen) {
-      console.log('Start Location:', this.startLatLng);
-      console.log('End Location:', this.endLatLng);
+    if (!this.endLatLng) {
+      alert('Please Select End Location');
+      return;
     }
+    this.getAddress();
+    this.isModalOpen = true;
   }
-    
-  confirmLocation() {
-    if (this.startLatLng && this.endLatLng) {
-      this.modalCtrl.dismiss({
-        startLatLng: this.startLatLng,
-        endLatLng: this.endLatLng
-      });
-      setTimeout(() => {
-        this.closeModal();
-      }, 1000);
-      
-    } else {
-      console.warn('Please select both start and end locations');
-    }
-  }
-  
-  closeModal() {
+  onWillDismiss() {
     this.isModalOpen = false;
-    this.modalCtrl.dismiss();
-    console.log('Error aa rha hai')
   }
-  
+  closeModal(data: any, status: any) {
+    this.modalCtrl.dismiss(data, status);
+  }
+  async getAddress() {
+    const options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+
+    try {
+      if (this.startLatLng) {
+        const startResults = await this.nativeGeocoder.reverseGeocode(this.startLatLng.lat, this.startLatLng.lng, options);
+        this.startAddress = startResults[0];
+        this.startLatLng.address = this.startAddress?.addressLines;
+        console.log('Start Address:', startResults[0]);
+      }
+
+      if (this.endLatLng) {
+        const endResults = await this.nativeGeocoder.reverseGeocode(this.endLatLng.lat, this.endLatLng.lng, options);
+        this.endAddress = endResults[0];
+        this.endLatLng.address = this.endAddress?.addressLines;
+        console.log('End Address:', endResults[0]);
+      }
+    }
+    catch (error) {
+      console.error('Error getting address', error);
+    }
+  }
+
+  saveLocation(){
+    if (!this.startLatLng) {
+      alert('Please Select Start Location');
+      return;
+    }
+    if (!this.endLatLng) {
+      alert('Please Select End Location');
+      return;
+    }
+    this.getAddress().then(() => {
+      this.modalCtrl.dismiss();
+    });
+    setTimeout(() => {
+      this.closeModal({ startLatLng: this.startLatLng, endLatLng: this.endLatLng }, 'confirm');
+    },1000);
+  }
 }
-  
+
 

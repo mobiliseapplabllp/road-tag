@@ -27,6 +27,10 @@ const routes: Routes = [
   {
     path: 'modal',
     component: ModalComponent
+  },
+  {
+    path: 'tag-road',
+    loadChildren: () => import('./pages/tag-road/tag-road.module').then( m => m.TagRoadPageModule)
   }
 ];
 

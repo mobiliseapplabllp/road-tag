@@ -5,99 +5,69 @@
     </ion-buttons>
     <ion-title>Select Start and End Location</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="closeModal()">
+      <ion-button (click)="closeModal(null, 'false')">
         <ion-icon name="close-outline"></ion-icon>
       </ion-button>
-     
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-searchbar placeholder="Search city/road" (ionInput)="onSearch($event)"></ion-searchbar>
+  <ion-searchbar placeholder="Search city/road" debounce="1500" (ionInput)="onSearch($event)"></ion-searchbar>
   <div id="map1" style="height: 100%;width:100%"></div>
+  <ion-modal class="myModal" [isOpen]="isModalOpen" [initialBreakpoint]="1" [breakpoints]="[1]"(willDismiss)="onWillDismiss()">
+    <ng-template>
+      <ion-content class="ion-padding" style="--background:white">
+        <fieldset style="border-radius: 10px;">
+          <legend>Start Location</legend>
+          <ion-row>
+            <ion-col size="6">
+              <ion-text color="dark">Latitude</ion-text><br>
+              <ion-text>{{startLatLng.lat}}</ion-text>
+            </ion-col>
+            <ion-col size="6">
+              <ion-text color="dark">Longitude</ion-text><br>
+              <ion-text>{{startLatLng.lng}}</ion-text>
+            </ion-col>
+            <ion-col size="12">
+              <ion-text color="dark">Address</ion-text><br>
+              <ion-text>{{ startLatLng.address || 'No start address available' }}</ion-text>
+            </ion-col>
+          </ion-row>
+        </fieldset><br>
+        <fieldset style="border-radius: 10px;">
+          <legend>End Location</legend>
+          <ion-row>
+            <ion-col size="6">
+              <ion-text color="dark">Latitude</ion-text><br>
+              <ion-text>{{endLatLng.lat}}</ion-text>
+            </ion-col>
+            <ion-col size="6">
+              <ion-text color="dark">Longitude</ion-text><br>
+              <ion-text>{{endLatLng.lng}}</ion-text>
+            </ion-col>
+            <ion-col size="12">
+              <ion-text color="dark">Address</ion-text><br>
+              <ion-text>{{ endLatLng.address || 'No end address available' }}</ion-text>
+            </ion-col>
+          </ion-row>
+        </fieldset>
+      </ion-content>
+      <ion-footer>
+        <ion-button expand="block" color="primary" (click)="saveLocation()">Save</ion-button>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 <ion-footer>
   <ion-row>
     <ion-col size="4">
-      <ion-button expand="block" color="success" (click)="setStartMode()">Start</ion-button>
+      <ion-button expand="block" color="success" (click)="setStartMode()" [fill]="startLatLng ? 'solid' : 'outline'">Start</ion-button><!-- <ion-icon [name]="startLatLng ? 'checkmark-done-outline':''" slot="end"></ion-icon>-->
     </ion-col>
     <ion-col size="4">
-      <ion-button expand="block" color="primary" (click)="setOpen(true)">Confirm</ion-button>
+      <ion-button expand="block" color="primary" (click)="confirmModal()">Confirm</ion-button>
     </ion-col>
     <ion-col size="4">
-      <ion-button expand="block" color="danger" (click)="setEndMode()">End</ion-button>
+      <ion-button expand="block" color="danger" (click)="setEndMode()" [fill]="endLatLng?'solid':'outline'">End</ion-button><!--<ion-icon [name]="endLatLng ? 'checkmark-done-outline':''" slot="end"></ion-icon>-->
     </ion-col>
   </ion-row>
 </ion-footer>
-<ion-modal [isOpen]="isModalOpen" [initialBreakpoint]="0.7">
-  <ng-template>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Location</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="setOpen(false)"><ion-icon name="close-outline"></ion-icon></ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <section class="inputbox">
-        <ion-text color="primary">Start Point Lat/Long</ion-text>
-        <ion-row>
-          <ion-col size="6">
-            <ion-text>Lng</ion-text>
-            <ion-item lines="none" class="dsble" color="none">
-              <ion-label>{{startLatLng.lat}}</ion-label>
-            </ion-item>
-          </ion-col>
-          <ion-col size="6">
-            <ion-text>Lng</ion-text>
-            <ion-item lines="none" class="dsble" color="none">
-              <ion-label>{{startLatLng.lng}}</ion-label>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-text>Address</ion-text>
-            <ion-item lines="none" class="dsble" color="none">
-              <ion-label>Faridabad</ion-label>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-      </section>
-      <section class="inputbox">
-        <ion-text color="primary">End Point Lat/Long</ion-text>
-        <ion-row>
-          <ion-col size="6">
-            <ion-text position="stacked">Latitude</ion-text>
-            <ion-item lines="none" color="none" class="dsble">
-              <ion-label>{{endLatLng.lat}}</ion-label>
-            </ion-item>
-          </ion-col>
-          <ion-col size="6">
-            <ion-text position="stacked">Longitude</ion-text>
-            <ion-item lines="none" color="none" class="dsble">
-              <ion-label>{{endLatLng.lng}}</ion-label>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-text>Address</ion-text>
-            <ion-item lines="none" class="dsble" color="none">
-              <ion-label>Mobilise App Lab</ion-label>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-      </section>
-      <section>
-        <ion-text color="primary">Travel Time</ion-text>
-        <ion-item lines="none" color="none">
-          <ion-label>3hr</ion-label>
-          <ion-icon name="timer-outline" slot="end"></ion-icon>
-        </ion-item>
-      </section>
-      <ion-button expand="block" style="padding-left: 10px; padding-right: 10px;" (click)="confirmLocation()">Save Location</ion-button>
-    </ion-content>
-  </ng-template>
-</ion-modal>
