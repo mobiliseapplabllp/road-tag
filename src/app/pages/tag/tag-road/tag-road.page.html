@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Add</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- <form [formGroup]="addForm" (ngSubmit)="submitForm()"> -->
+  <ion-card >
+    <!-- <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
+    </ion-card-header> -->
+    <ion-card-content>
+      Identification & Provinance        
+      <ion-text></ion-text>
+      <br>
+      <section class="inputbox">
+        <ion-text color="primary">Road ID <ion-text color="danger">*</ion-text> </ion-text>
+        <ion-item lines="none">
+          <ion-input type="text"  placeholder="Enter Road ID"></ion-input>
+          <!-- <ion-button slot="end" fill="outline" (click)="verifyId()">Verify</ion-button> -->
+        </ion-item>
+        <ion-text color="primary">UR ID <ion-text color="danger">*</ion-text></ion-text>
+        <ion-item lines="none">
+          <ion-input type="text" placeholder="Enter UR ID"></ion-input>
+        </ion-item>
+        <ion-text color="primary">Road Name</ion-text>
+        <ion-item lines="none" class="dsble" color="none"> 
+          <ion-input type="text"  placeholder="road name" readonly></ion-input>
+        </ion-item>
+        <ion-text color="primary">Source <ion-text color="danger">*</ion-text></ion-text>
+        <ion-item lines="none">
+          <ion-select interface="action-sheet" placeholder="Select"  mode="ios">
+            <ion-select-option>1</ion-select-option>
+            <ion-select-option>2</ion-select-option>
+            <ion-select-option>3</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </section>
+    </ion-card-content>
+  </ion-card>
+  <!-- </form> -->
+</ion-content>
+
+  <!-- <ion-button expand="block" type="submit" [disabled]="!addForm.valid">Submit</ion-button> -->

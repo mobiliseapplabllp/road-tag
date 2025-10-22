@@ -31,7 +31,7 @@ export class LoginPage implements OnInit {
       console.log('User ID:', loginData.username);
       console.log('Password:', loginData.password);
       console.log('Full Form Data:', loginData);
-      this.router.navigateByUrl('/road-tag')
+      this.router.navigateByUrl('/tag-road');
     } else {
       console.log('Form is invalid!');
     }

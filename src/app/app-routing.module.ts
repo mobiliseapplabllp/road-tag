@@ -30,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'tag-road',
-    loadChildren: () => import('./pages/tag-road/tag-road.module').then( m => m.TagRoadPageModule)
+    loadChildren: () => import('./pages/tag/tag-road/tag-road.module').then( m => m.TagRoadPageModule)
   }
 ];
 
