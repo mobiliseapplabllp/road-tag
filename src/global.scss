@@ -38,14 +38,15 @@
 
 
 section.inputbox {
+  margin: 0px 3px;
   ion-text {
     font-size: 14px;  
+    font-weight: 455;
   }
   ion-item {
     margin: 5px 0px;
     border:1px solid #D9E1EB;
-    border-radius: 4px;
-    font-weight: bold;
+    border-radius: 4px;    
     font-size:90%;
     background-color: white;
     ion-icon {
@@ -65,6 +66,11 @@ section.inputbox {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.vc {
+  display: flex;
+  align-items: center;
 }
 
 .dsble{

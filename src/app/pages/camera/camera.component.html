@@ -1,0 +1,33 @@
+<ion-content id="content" *ngIf="!finalImage"></ion-content>
+<ion-footer mode="md" *ngIf="!finalImage">
+  <ion-row>
+    <ion-col>
+      <ion-button (click)="closeAction('', false)" expand="block" id="close">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button (click)="takePicture()" expand="block" id="capture">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button (click)="flipCamera()" expand="block" id="flip">
+        <ion-icon slot="icon-only" name="repeat"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>
+<ion-content  *ngIf="finalImage">
+  <img [src]="finalImage" alt="Image from Blob" style="height:100%;width:100%">
+</ion-content>
+<ion-footer *ngIf="finalImage">
+  <ion-row>
+    <ion-col size="6" class="ion-text-center">
+      <ion-button (click)="retry()" fill="clear">Retry</ion-button>
+    </ion-col>
+    <ion-col size="6" class="ion-text-center">
+      <ion-button (click)="done()" fill="clear">Done</ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

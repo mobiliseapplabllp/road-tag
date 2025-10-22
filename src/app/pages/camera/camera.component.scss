@@ -1,0 +1,9 @@
+ion-content {
+  --background: transparent !important;
+}
+
+.overlay {
+  position:absolute;
+  z-index: 9999;
+  bottom: 0;
+}

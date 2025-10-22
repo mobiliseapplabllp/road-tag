@@ -11,4 +11,11 @@
     --padding-top: 0.5em;
     --padding-bottom: 0.5em;
     min-height: 30px;
-}
+  }
+
+  ion-row {
+    ion-col {
+      // border:1px solid black;
+      padding: 0px
+    }
+  }

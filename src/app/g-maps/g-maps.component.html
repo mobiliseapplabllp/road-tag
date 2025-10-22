@@ -3,72 +3,70 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Select Start and End Location</ion-title>
+    <ion-title>Select Location</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="closeModal(null, 'false')">
         <ion-icon name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar mode="md" placeholder="Search city/road" debounce="1000" (ionInput)="onSearch($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-searchbar placeholder="Search city/road" debounce="1500" (ionInput)="onSearch($event)"></ion-searchbar>
-  <div id="map1" style="height: 100%;width:100%"></div>    
-  <ion-modal class="myModal" [isOpen]="isModalOpen" [initialBreakpoint]="1" [breakpoints]="[1]" (willDismiss)="onWillDismiss()">
-    <ng-template>
-      <ion-content class="ion-padding" style="--background:white">
-        <fieldset style="border-radius: 10px;">
-          <legend>Start Location</legend>
-          <ion-row>
-            <ion-col size="6">
-              <ion-text color="dark">Latitude</ion-text><br>
-              <ion-text>{{startLatLng.lat}}</ion-text>
-            </ion-col>
-            <ion-col size="6">
-              <ion-text color="dark">Longitude</ion-text><br>
-              <ion-text>{{startLatLng.lng}}</ion-text>
-            </ion-col>
-            <ion-col size="12">
-              <ion-text color="dark">Address</ion-text><br>
-              <ion-text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque doloremque provident alias minus repellendus fugit perferendis expedita eos, eius dolor veniam, amet hic harum maiores iure animi, cum quod! Reiciendis.</ion-text>
-            </ion-col>
-          </ion-row>
-        </fieldset>
-        <br>
-        <fieldset style="border-radius: 10px;">
-          <legend>End Location</legend>
-          <ion-row>
-            <ion-col size="6">
-              <ion-text color="dark">Latitude</ion-text><br>
-              <ion-text>{{endLatLng.lat}}</ion-text>
-            </ion-col>
-            <ion-col size="6">
-              <ion-text color="dark">Longitude</ion-text><br>
-              <ion-text>{{endLatLng.lng}}</ion-text>
-            </ion-col>
-            <ion-col size="12">
-              <ion-text color="dark">Address</ion-text><br>
-              <ion-text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque doloremque provident alias minus repellendus fugit perferendis expedita eos, eius dolor veniam, amet hic harum maiores iure animi, cum quod! Reiciendis.</ion-text>
-            </ion-col>
-          </ion-row>
-        </fieldset>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
+<ion-content>  
+  <div id="map1" style="height: 60%;width:100%"></div>    
+  <ion-row>
+    <ion-col size="6" class="vc">1. North Direction</ion-col>
+    <ion-col size="6" class="ion-text-right ion-padding-right">
+      <ion-button size="small" (click)="pickImage(1)" [color]="finalData.image1 ? 'success': 'primary' " class="ion-text-capitalize">Attachment 
+        <ion-icon [name]="finalData.image1 ? 'checkmark-done-outline': 'attach-outline'" slot="end"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="6" class="vc">2. South Direction</ion-col>
+    <ion-col size="6" class="ion-text-right ion-padding-right">
+      <ion-button size="small" (click)="pickImage(2)" [color]="finalData.image2 ? 'success': 'primary' " class="ion-text-capitalize">Attachment 
+        <ion-icon [name]="finalData.image2 ? 'checkmark-done-outline': 'attach-outline'" slot="end"></ion-icon>
+      </ion-button>
+    </ion-col>    
+  </ion-row>
+  <ion-row>
+    <ion-col size="6" class="vc">3. East Direction</ion-col>
+    <ion-col size="6" class="ion-text-right ion-padding-right">
+      <ion-button size="small" (click)="pickImage(3)" [color]="finalData.image3 ? 'success': 'primary' " class="ion-text-capitalize">Attachment 
+        <ion-icon [name]="finalData.image3 ? 'checkmark-done-outline': 'attach-outline'" slot="end"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="6" class="vc">4. West Direction</ion-col>
+    <ion-col size="6" class="ion-text-right ion-padding-right">
+      <ion-button size="small" (click)="pickImage(4)" [color]="finalData.image4 ? 'success': 'primary' " class="ion-text-capitalize">Attachment 
+        <ion-icon [name]="finalData.image4 ? 'checkmark-done-outline': 'attach-outline'" slot="end"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
 </ion-content>
 <ion-footer>
   <ion-row>
+    <ion-col>
+      <ion-button expand="block" mode="md" (click)="save()">Save</ion-button>
+    </ion-col>
+  </ion-row>
+  <!-- <ion-row>
     <ion-col size="4">
-      <ion-button expand="block" color="success" (click)="setStartMode()">Start</ion-button>
+      <ion-button expand="block" color="success" (click)="setStartMode()" [fill]="mode === 'start' ? 'solid': 'outline'">Start</ion-button>
     </ion-col>
     <ion-col size="4">
       <ion-button expand="block" color="primary" (click)="confirmModal()">Confirm</ion-button>
     </ion-col>
     <ion-col size="4">
-      <ion-button expand="block" color="danger" (click)="setEndMode()">End</ion-button>
+      <ion-button expand="block" color="danger" (click)="setEndMode()" [fill]="mode === 'end' ? 'solid': 'outline'">End</ion-button>
     </ion-col>
-  </ion-row>
+  </ion-row> -->
 </ion-footer>
 
 

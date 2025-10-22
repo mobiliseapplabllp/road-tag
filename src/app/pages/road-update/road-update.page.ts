@@ -30,12 +30,12 @@ export class RoadUpdatePage implements OnInit {
 
   ngOnInit() {
     this.initialForm();
-    this.getApi();
+    // this.getApi();
   }
 
-  getApi() {    
-    this.httpApi.getDirections('28.510543263855247, 77.29847171803526', '28.511042862603688, 77.29824246473908').subscribe();
-  }
+  // getApi() {    
+  //   this.httpApi.getDirections('28.510543263855247, 77.29847171803526', '28.511042862603688, 77.29824246473908').subscribe();
+  // }
 
   initialForm() {
     this.updateRoadForm = this.formBuilder.group({
@@ -53,8 +53,7 @@ export class RoadUpdatePage implements OnInit {
     })
   }
   submitForm() {
-    if (!this.updateRoadForm.valid) {
-      console.log('invalid form')
+    if (!this.updateRoadForm.valid) {      
       this.updateRoadForm.markAllAsTouched();
       this.showToast('Fill the required field', 'danger')
       return;
@@ -73,8 +72,7 @@ export class RoadUpdatePage implements OnInit {
     });
     modal.onWillDismiss().then(disModal => {
       if (disModal.role) {
-        // this.addAsset.get('depart_name')?.setValue(disModal.data.department_name);
-        // this.addAsset.get('department')?.setValue(disModal.data.department_code);
+        console.log(disModal);        
       }
     });
     modal.present();
@@ -117,6 +115,7 @@ export class RoadUpdatePage implements OnInit {
   //     }
   //   }
   // }
+  
   async photo(type: 'start' | 'end') {
     try {
       const image = await Camera.getPhoto({

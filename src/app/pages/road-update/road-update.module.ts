@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { RoadUpdatePageRoutingModule } from './road-update-routing.module';
 
 import { RoadUpdatePage } from './road-update.page';
+import { CameraComponent } from '../camera/camera.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,9 @@ import { RoadUpdatePage } from './road-update.page';
     IonicModule,
     RoadUpdatePageRoutingModule
   ],
-  declarations: [RoadUpdatePage]
+  declarations: [
+    RoadUpdatePage,
+    CameraComponent
+  ]
 })
 export class RoadUpdatePageModule {}

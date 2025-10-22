@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Router } from '@angular/router';
-import { ModalComponent } from '../modal/modal.component'; 
+import { GMapsComponent } from 'src/app/g-maps/g-maps.component';
+import { Api } from 'src/app/provider/api';
+import { Common } from 'src/app/provider/common/common';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-road-tag',
@@ -12,76 +14,248 @@ import { ModalComponent } from '../modal/modal.component';
   standalone: false
 })
 export class RoadTagPage implements OnInit {
-  addForm!: FormGroup;
-  popover!: any;
-  startPhoto : any = null;
-  endPhoto : any = null;
-  updatedFormData: any;
+  addForm!: FormGroup;  
+  isModalCount = 0;
+  districtArr: any = [];
+  divisionArr: any = [];
+  wardArr: any = [];
+  subDivisionArr: any = [];
+  departArr: any = [];
+  widthCatArr: any = [];
+  sourceArr: any = [];
+  roadCatArr: any = [];
+  lastTreatArr: any = [];
+
+  formData = new FormData();
   constructor(
     private formBuilder: FormBuilder,
-    private modal: ModalController,
-    private router: Router
+    private modalCtrl: ModalController,
+    private router: Router,
+    private httpApi: Api,
+    private common: Common
   ) {}
   ngOnInit() {
-    this.initialForm();
-    
-    const storedDataStr = localStorage.getItem('updatedFormData');
-    if (storedDataStr) {
-      this.updatedFormData = JSON.parse(storedDataStr);
-      console.log('Stored Data:', this.updatedFormData);
-  
-      this.verifyId(); 
-    }
+    this.initialForm();    
+    this.getDistrict();    
+    this.getDivision();
+    // this.getSubDivision();
+    this.getDepartment();
+    this.getWidthCat();
+    this.getTechnology();
+    this.getRoadCat();
+    this.getLastTreatment();
   }
-  
 
   initialForm() {
     this.addForm = this.formBuilder.group({
-      last_treatment_date: [''],
-      dlp_expiry_date: [''],
-      next_treatment_due: [''],
-      startPhoto: [''],
-      endPhoto: [''],
-      road_id: ['', Validators.required],
-      ur_id: ['', Validators.required],
+      dist_id: [''],
+      devsn_id: [''],
+      ward_id: [''],
+      sub_devsn_id: [''],
+      area: [''],
+      sub_area: [''],
+      circle_road: [''],
+      lok_sabha: [''],
+      vidhan_sabha: [''],
+      dept_id: [''],
+      rdw: [''],
+      carriageway_width: [''],
+      with_category: [''],
+      width: [''],
+      exist_road_crust: [''],
+      source: [''],
       road_name: [''],
-      source: ['', Validators.required],
-      start_point_lat: [''],
-      start_point_long: [''],
-      end_point_lat: [''],
-      end_point_long: [''],
-      gis_length: [''],
-      length: [''],
-      length_doc: [''],
-      department_ulb: [''],
-      location_locality: [''],
-      ward: [''],
-      circle: [''],
-      division: [''],
-      district: [''],
-      lok_sabha_cons: [''],
-      vidhan_sabha_cons: [''],
-      right_way_rd_wise: [''],
-      carriageway_width_rd_wise: [''],
-      dimension_width: [''],
-      dimension_width_cat: [''],
-      road_crust: [''],
+      road_id: [''],
       road_category: [''],
-      area_topology: [''],
-      last_treatment_type: [''],
-      varification_sts: [''],
-      remark: ['']
+      technology_area: [''],  
+      start_pnt_current_location: [''],
+      // start_pnt_picture_1: [''],
+      // start_pnt_picture_2: [''],
+      // start_pnt_picture_3: [''],
+      // start_pnt_picture_4: [''],
+      end_pnt_current_location: [''],
+      // end_pnt_picture_1: [''],
+      // end_pnt_picture_2: [''],
+      // end_pnt_picture_3: [''],
+      // end_pnt_picture_4: [''],
+      last_treatment_type: [''],   
+      length_doc_status: [''],   
+      last_treatment_date: [''],
+      dlp_expiry: [''],
+      next_treatment_date: [''],
+      next_treatment_due: [''],
+      verification_status: [''],
+      remark: [''],     
     });
   }
 
-  changeDate(type: string) {
-    console.log('Date changed:', type);
-    console.log('Selected Date:', this.addForm.value.last_treatment_date);
-    setTimeout(() => {
-      this.popover?.dismiss();
-    }, 100);
+
+
+  getDistrict() {
+    this.httpApi.getDistrict().subscribe({
+      next:(data: any) => {
+        if(data.status) {
+          this.districtArr = data.data
+        } else {
+          this.common.presentToast(data.msg, 'warning');
+        }
+      },
+      error:() => {
+
+      },
+      complete:() => {
+
+      }
+    });
   }
 
+  getDivision() {
+    this.httpApi.getDivision().subscribe({
+      next:(data: any) => {
+        if (data.status) {
+          this.divisionArr = data.data;
+        } else {
+          this.common.presentToast(data.msg, 'warning');
+        }
+      },
+      error:() => {
+
+      },
+      complete:() => {
+
+      }
+    });
+  }
+
+  changeDivision(ev: any) {
+    console.log(ev.target.value);
+    this.getWard(ev.target.value);
+  }
+
+  getWard(val: string) {
+    this.common.presentLoading().then(preLoad => {
+      this.httpApi.getWard(val).subscribe({
+        next:(data: any) => {
+          if (data.status) {
+            this.wardArr = data.data;
+          }
+        },
+        error:() => {
+          this.common.dismissloading();
+          this.common.presentToast(environment.errMsg, 'danger');
+        },
+        complete:() => {
+          this.common.dismissloading();
+        }
+      });
+    })    
+  }
+
+  getSubDivision() {
+    this.httpApi.getSubDivision().subscribe({
+      next:(data: any) => {
+        if (data.status) {
+          this.subDivisionArr = data.data;
+        } else {
+          this.common.presentToast(data.msg, 'warning');
+        }
+      },
+      error:() => {
+        
+      },
+      complete:() => {
+
+      }
+    });
+  }
+
+  getDepartment() {
+    this.httpApi.getDepartment().subscribe({
+      next:(data: any) => {
+        if (data.status) {
+          this.departArr = data.data;
+        } else {
+          this.common.presentToast(data.msg, 'warning');
+        }
+      },
+      error:() => {
+
+      },
+      complete:() => {
+
+      }
+    });
+  }
+
+  getWidthCat() {
+    this.httpApi.getWidthCat().subscribe({
+      next:(data: any) => {
+        if (data.status) {
+          this.widthCatArr = data.data;
+        }
+      },
+      error:() => {
+
+      },
+      complete:() => {
+
+      }
+    });
+  }
+
+  getTechnology() {
+    this.httpApi.getTechnology().subscribe({
+      next:(data: any) => {
+        if (data.status) {
+          this.sourceArr = data.data;
+        } else {
+          this.common.presentToast(data.msg, 'warning');
+        }
+      },
+      error:() => {
+
+      },
+      complete:() => {
+
+      }
+    })
+  }
+  
+  getRoadCat() {
+    this.httpApi.getRoadCat().subscribe({
+      next:(data: any) => {
+        if (data.status) {
+          this.roadCatArr = data.data;
+        } else {
+          this.common.presentToast(data.msg, 'warning');
+        }
+      },
+      error:() => {
+
+      },
+      complete:() => {
+
+      }
+    });
+  }
+
+  getLastTreatment() {
+    this.httpApi.getLastTreatment().subscribe({
+      next:(data: any) => {
+        if (data.status) {
+          this.lastTreatArr = data.data;
+        } else {
+          this.common.presentToast(data.msg, 'warning');
+        }
+      },
+      error:() => {
+
+      },
+      complete:() => {
+
+      }
+    });
+  }
 
   submitForm() {
     console.log(this.addForm.value);
@@ -91,20 +265,98 @@ export class RoadTagPage implements OnInit {
     this.router.navigateByUrl(url);
   }
 
-  verifyId() {
-    const enteredRoadId = this.addForm.get('road_id')?.value;
-    if (this.updatedFormData.road_id === enteredRoadId) {
-      this.addForm.patchValue({
-        ...this.updatedFormData
-      });
-      console.log('Form patched with stored data');
-    } else {
-      console.log('No matching road data found');
+  async openModal(type: string) {
+    this.isModalCount = this.isModalCount + 1;
+    if (this.isModalCount > 2) {     
+      this.isModalCount = 0; 
+      return;
     }
+    setTimeout(() => {
+      this.isModalCount = 0
+    }, 500);
 
+    const modal = await this.modalCtrl.create({
+      component: GMapsComponent,
+      cssClass: 'my-modal',      
+    });
+    modal.onWillDismiss().then(disModal => {
+      if (disModal.role === 'true') {
+        console.log(disModal);
+        if (type === 'start') {                    
+          this.formData.delete('start_pnt_picture_1');
+          this.formData.delete('start_pnt_picture_2');
+          this.formData.delete('start_pnt_picture_3');
+          this.formData.delete('start_pnt_picture_4');
+          let latlng = (disModal.data.startLatLng.lat + ',' + disModal.data.startLatLng.lng).toString();
+          this.addForm.get('start_pnt_current_location')?.setValue(latlng);          
+          this.formData.append('start_pnt_picture_1', disModal.data.image1, disModal.data.image1Name);
+          this.formData.append('start_pnt_picture_2', disModal.data.image2, disModal.data.image2Name);
+          this.formData.append('start_pnt_picture_3', disModal.data.image3, disModal.data.image3Name);
+          this.formData.append('start_pnt_picture_4', disModal.data.image4, disModal.data.image4Name);
+        } else if (type === 'end') {          
+          this.formData.delete('end_pnt_picture_1');
+          this.formData.delete('end_pnt_picture_2');
+          this.formData.delete('end_pnt_picture_3');
+          this.formData.delete('end_pnt_picture_4');
+          let latlng = (disModal.data.startLatLng.lat + ',' + disModal.data.startLatLng.lng).toString();          
+          this.addForm.get('end_pnt_current_location')?.setValue(latlng);
+          this.formData.append('end_pnt_picture_1', disModal.data.image1, disModal.data.image1Name);
+          this.formData.append('end_pnt_picture_2', disModal.data.image2, disModal.data.image2Name);
+          this.formData.append('end_pnt_picture_3', disModal.data.image3, disModal.data.image3Name);
+          this.formData.append('end_pnt_picture_4', disModal.data.image4, disModal.data.image4Name);
+        }      
+      }
+    });
+    modal.present();
   }
-  
 
-  
+  submit() {
+    for (var key in this.addForm.value) {
+      console.log(key);
+      console.log(this.addForm.value[key]);
+      this.formData.delete(key);
+      this.formData.append(key, this.addForm.value[key]);
+    }
+    this.httpApi.addRoad(this.formData).subscribe({
+      next:() => {
+
+      },
+      error:() => {
+
+      },
+      complete:() => {
+
+      }
+    });
+  }
+
+  pickImage() {
+    this.common.selectImage(['document'], (blob: Blob | File) => {
+      let extension = 'bin';
+      if ('name' in blob && blob.name) {
+        const parts = blob.name.split('.');
+        extension = parts.length > 1 ? parts.pop()!.toLowerCase() : 'bin';
+      } else if (blob.type) {
+        const mimeToExtMap: Record<string, string> = {
+          'image/jpeg': 'jpg',
+          'image/png': 'png',
+          'image/tiff': 'tiff',
+          'image/webp': 'webp',
+          'application/pdf': 'pdf',
+          'application/vnd.ms-excel': 'xls',
+          'application/msword': 'doc',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+        };
+        extension = mimeToExtMap[blob.type] || 'bin';
+      }
+      const randomFilename = `${Date.now()}_${Math.floor(10000 + Math.random() * 90000)}.${extension}`;
+      console.log(randomFilename);
+      console.log(blob);
+      this.addForm.get('length_doc_status')?.setValue('1');
+      this.formData.delete('length_document');
+      this.formData.append('length_document', blob, randomFilename);
+    });
+  }
   
 }

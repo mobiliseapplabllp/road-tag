@@ -1,38 +1,3 @@
-<!-- <ion-content>
-  <div>
-    <div>
-
-    </div>
-    <div class="form">
-      <form [formGroup]="loginForms" autocomplete="off" (ngSubmit)="onLogin()"> 
-        <ion-list>
-          <ion-item>
-            <ion-input label="User ID" label-placement="floating" type="text" name="user_login" autocomplete="off"
-              formControlName="userId">
-            </ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input label="Password" label-placement="floating" type="password" name="user_pass"
-              autocomplete="new-password" formControlName="password">
-            </ion-input>
-          </ion-item>
-          <ion-row class="ion-text-center">
-            <ion-col>
-              <ion-button type="submit">Login</ion-button>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-button>Register</ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-list>
-      </form>
-
-    </div>
-  </div>
-</ion-content> -->
-
 <ion-content class="center">
   <div style="width:100%;height:100%;border-top:50vh solid var(--ion-color-primary);position: absolute;top:0px;z-index:-1"></div>
   <div style="height:100%;width:100%" class="center">
@@ -40,7 +5,7 @@
       <section style="width:100%" *ngIf="currentView === 'login' ">
         <ion-row>
           <ion-col class="ion-text-center">
-            <img src="assets/icon/logo.jpg" style="height:100px;width:120px" alt="logo img">
+            <img src="assets/logo.jpg" style="height:100px;width:120px" alt="logo img">
           </ion-col>
         </ion-row>
         <form [formGroup]="loginForms" mode="md">
@@ -77,25 +42,25 @@
       </section>
 
       <section *ngIf="currentView === 'otp' ">
-        <ion-button  mode="ios" class="ion-no-padding"><!--fill="clear" (click)="currentView = 'login'"-->
+        <ion-button fill="clear" class="ion-no-padding"  mode="ios" (click)="currentView = 'login' ">
           <ion-icon name="chevron-back-outline" ></ion-icon>Back
         </ion-button>
         <h3>
           <ion-text color="primary">Multi-Factor Authentication</ion-text>
         </h3>
         <p>
-          <ion-text color="primary"></ion-text><!--{{sendMobileMsg}}-->
+          <ion-text color="primary">{{sendMobileMsg}}</ion-text><!--{{sendMobileMsg}}-->
         </p>
         <br>
         <ion-row>
-          <ion-col class="center">
-            <!-- <ng-otp-input (onInputChange)="changeOtp($event)" [config]="otpConfig"></ng-otp-input>-->
+          <ion-col>            
+            <ion-input-otp length="4" (ionInput)="changeOtp($event)"> Didn't get a code? <a href="#">Resend the code</a> </ion-input-otp>            
           </ion-col>
         </ion-row>        
         <br>
         <ion-row>
           <ion-col class="ion-no-padding">
-            <ion-button expand="block" fill="solid" class="ion-text-capitalie" >Submit Code </ion-button><!--(click)="verifyOtp()"-->
+            <ion-button expand="block" fill="solid" class="ion-text-capitalie" [disabled]="!otp" (click)="verifyOtp();">Submit Code </ion-button><!--(click)="verifyOtp()"-->
           </ion-col>
         </ion-row>
       </section>

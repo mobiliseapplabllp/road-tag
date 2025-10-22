@@ -1,5 +1,359 @@
 <ion-header>
   <ion-toolbar color="primary">
+    <ion-title>Add Road</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="addForm" (ngSubmit)="submitForm()">
+    <ion-card style="margin:0px;border-radius: 0px;">
+      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">
+        LOCATION INFO </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">District</ion-text>
+              <ion-item lines="none">
+                <ion-select placeholder="Select District" interface="action-sheet" formControlName="dist_id"
+                  mode="ios">
+                  <ion-select-option *ngFor="let dat of districtArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Division</ion-text>
+              <ion-item lines="none">
+                <ion-select placeholder="Select Division" interface="action-sheet" formControlName="devsn_id" mode="ios" (ionChange)="changeDivision($event)">
+                  <ion-select-option *ngFor="let dat of divisionArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Ward</ion-text>
+              <ion-item lines="none">
+                <ion-select placeholder="Select Ward" interface="action-sheet" formControlName="ward_id" mode="ios">
+                  <ion-select-option *ngFor="let dat of wardArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Sub Division</ion-text>
+              <ion-item lines="none">
+                <ion-select placeholder="Sub Division" interface="action-sheet" formControlName="sub_devsn_id" mode="ios">
+                  <ion-select-option *ngFor="let dat of subDivisionArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Area</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="area" placeholder="Enter Area"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Sub Area</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="sub_area" placeholder="Enter Sub Area"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Circle Road</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="circle_road" placeholder="Circle Road"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Lok Sabha</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="lok_sabha" placeholder="Lok Sabha"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Vidhan Sabha</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="vidhan_sabha" placeholder="Vidhan Sabha"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Department</ion-text>
+              <ion-item lines="none">
+                <ion-select placeholder="Select Department" interface="action-sheet" formControlName="dept_id" mode="ios">
+                  <ion-select-option *ngFor="let dat of departArr" [value]="dat.dept_id" >{{dat.dept_desc}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+    <br>
+    <ion-card style="margin:0px;border-radius: 0px;">
+      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">
+        IDENTIFICATION & DIMENSION </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">RDW</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="rdw" placeholder="Enter RDW"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Carriageway Width</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="carriageway_width" placeholder="Carriage Width"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Width Category</ion-text>
+              <ion-item lines="none">
+                <ion-select placeholder="Select Width Category" interface="action-sheet" formControlName="with_category" mode="ios">
+                  <ion-select-option *ngFor="let dat of widthCatArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Width</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="width" placeholder="Enter Width"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="12">
+            <section class="inputbox">
+              <ion-text color="primary">Existing Road Crust</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="exist_road_crust" placeholder="Existing Road Crust"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Source</ion-text>
+              <ion-item lines="none">
+                <ion-select placeholder="Select Source" interface="action-sheet" formControlName="source"  mode="ios">
+                  <ion-select-option *ngFor="let dat of sourceArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Road Name</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="road_name" placeholder="Enter Road Name"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Road ID</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="road_id" placeholder="Enter Road ID"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">UR ID</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="road_id" placeholder="Enter UR ID"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Road Catgory</ion-text>
+              <ion-item lines="none">
+                <ion-select placeholder="Select Category" interface="action-sheet" formControlName="road_category"
+                  mode="ios">
+                  <ion-select-option *ngFor="let dat of roadCatArr" [value]="dat.mnfctrer_id">{{dat.mnfctrer_desc}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Technology Area</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="technology_area" placeholder="Technology Area"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+    <br>
+
+    <ion-card style="margin:0px;border-radius: 0px;">
+      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">
+        PHYSICAL LOCATION & GEOMETRY </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Start Point</ion-text>
+              <ion-item lines="none" (click)="openModal('start')">
+                <ion-input type="text" formControlName="start_pnt_current_location" placeholder="Start Ponit" readonly></ion-input>
+                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">End Point</ion-text>
+              <ion-item lines="none" (click)="openModal('end')">
+                <ion-input type="text" formControlName="end_pnt_current_location" placeholder="End Point" readonly></ion-input>
+                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">GIS Length</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="road_id" placeholder="Enter GIS Length"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Length</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="road_id" placeholder="Enter Length"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="12">
+            <ion-button size="small" (click)="pickImage()" [color]="addForm.value.length_doc_status === '1' ? 'success' : 'primary' " class="ion-text-capitalize">Length Document</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+    <br>
+
+    <ion-card style="margin:0px;border-radius: 0px;">
+      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">
+        MAINTENANCE & VERIFICATION </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Last Treatment Type</ion-text>
+              <ion-item lines="none">
+                <!-- <ion-input type="text" formControlName="road_id" placeholder="Last Treatment Type"></ion-input> -->
+                <ion-select placeholder="Treatment Type" interface="action-sheet" formControlName="last_treatment_type" mode="ios">
+                  <ion-select-option *ngFor="let dat of lastTreatArr" [value]="dat.id">{{dat.warranty}}</ion-select-option>                  
+                </ion-select>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Last Treatment Date</ion-text>
+              <ion-item id="last-trt-dte" lines="none">
+                <ion-input type="text" [value]="addForm.value.last_treatment_date | date" placeholder="Last Treatment Date" readonly></ion-input>
+              </ion-item>
+              <ion-popover trigger="last-trt-dte" mode="md">
+                <ng-template>
+                  <ion-datetime #popoverDatetime max="2099" presentation="date" size="cover" formControlName="last_treatment_date" [showDefaultButtons]="true"></ion-datetime>
+                </ng-template>
+              </ion-popover>
+            </section>
+          </ion-col>
+
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">DLF Expiry</ion-text>
+              <ion-item id="dlf-expry" lines="none">
+                <ion-input type="text" [value]="addForm.value.dlp_expiry | date" placeholder="DLF Expiry" readonly></ion-input>
+              </ion-item>
+              <ion-popover trigger="dlf-expry" mode="md">
+                <ng-template>
+                  <ion-datetime #popoverDatetime max="2099" presentation="date" size="cover" formControlName="dlp_expiry" [showDefaultButtons]="true"></ion-datetime>
+                </ng-template>
+              </ion-popover>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
+              <ion-text color="primary">Next Treatment Date</ion-text>
+              <ion-item id="nxt-trt-dte" lines="none">
+                <ion-input type="text" [value]="addForm.value.next_treatment_date | date" placeholder="Next Treatment Date" readonly></ion-input>
+              </ion-item>
+              <ion-popover trigger="nxt-trt-dte" mode="md">
+                <ng-template>
+                  <ion-datetime #popoverDatetime max="2099" presentation="date" size="cover" formControlName="next_treatment_date" [showDefaultButtons]="true"></ion-datetime>
+                </ng-template>
+              </ion-popover>
+            </section>
+          </ion-col>
+          <ion-col size="12">
+            <section class="inputbox">
+              <ion-text color="primary">Verificatoin Status</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="verification_status" placeholder="Verification Status"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="12">
+            <section class="inputbox">
+              <ion-text color="primary">Remark</ion-text>
+              <ion-item lines="none">
+                <ion-input type="text" formControlName="remark" placeholder="Enter Remark"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </form>
+  <!-- 
+  <ion-item lines="none" id="add_last_treatment_date">
+            <ion-input type="text" [value]="addForm.value.last_treatment_date | date: 'dd/MM/yyyy'"
+              placeholder="Select Date" readonly>
+            </ion-input>
+            <ion-popover trigger="add_last_treatment_date" mode="md">
+              <ng-template>
+                <ion-datetime #popoverDatetime max="2099" presentation="date" size="cover"
+                  formControlName="last_treatment_date" [showDefaultButtons]="true">
+                </ion-datetime>
+              </ng-template>
+            </ion-popover>
+             -->
+</ion-content>
+<ion-footer>
+  <ion-toolbar style="padding-left:10px;padding-right: 10px;">
+    <ion-button mode="md" expand="block" class="ion-text-capitalize" (click)="submit()">Submit <ion-icon name="arrow-forward-outline" slot="end"></ion-icon> </ion-button>
+  </ion-toolbar>
+</ion-footer>
+<!-- <ion-header>
+  <ion-toolbar color="primary">
     <ion-title >Road Add</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="outline" (click)="updateRoad('/road-update')">
@@ -12,9 +366,7 @@
 <ion-content>
   <form [formGroup]="addForm" (ngSubmit)="submitForm()">
     <ion-card>
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
-        Identification & Provinance        
-      </ion-card-header>
+      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)"> LOCATION INFO </ion-card-header>
       <ion-card-content>
         <br>
         <section class="inputbox">
@@ -60,12 +412,7 @@
               <ion-item lines="none" class="dsble" color="none">
                 <ion-input type="text" placeholder="Long" formControlName="start_point_long" readonly></ion-input>
               </ion-item>
-            </ion-col>
-            <!-- <ion-col size="2">
-              <ion-button (click)="openMap('start')">
-                <ion-icon name="location-outline"></ion-icon>
-              </ion-button>
-            </ion-col> -->
+            </ion-col>            
           </ion-row>
           <ion-text color="primary">End Point Lat/Long</ion-text>
           <ion-row>
@@ -78,12 +425,7 @@
               <ion-item lines="none" class="dsble" color="none">
                 <ion-input type="text" placeholder="Long" formControlName="end_point_long" readonly></ion-input>
               </ion-item>
-            </ion-col>
-            <!-- <ion-col size="2">
-              <ion-button (click)="openMap('end')">
-                <ion-icon name="location-outline"></ion-icon>
-              </ion-button>
-            </ion-col> -->
+            </ion-col>            
           </ion-row>
           <ion-text color="primary">GIS Length</ion-text>
           <ion-item lines="none">
@@ -355,45 +697,11 @@
           </ion-item>
         </section>
       </ion-card-content>
-    </ion-card>
-    <!-- <section>
-      <ion-button expand="block" type="submit">Add</ion-button>
-    </section> -->
+    </ion-card>    
   </form>
 </ion-content>
 <ion-footer>
   <ion-toolbar style="padding-left: 8px;padding-right:8px">
     <ion-button expand="block" type="submit" class="ion-text-capitalize" [disabled]="addForm.invalid"> Road Add <ion-icon name="add-outline" slot="end"></ion-icon> </ion-button>
   </ion-toolbar>
-</ion-footer>
-
-<!-- <ion-modal #modal [isOpen]="isModalOpen" (willDismiss)="onModalDismiss()">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Select {{ currentPointType === 'start' ? 'Start' : 'End' }} Location</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="closeModal()">
-              <ion-icon name="close"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <div #mapContainer style="width: 100%; height: 70vh;"></div>
-        <ion-card>
-          <ion-card-content>
-            <ion-text>
-              <p><strong>Selected Location:</strong></p>
-              <p>Latitude: {{ selectedLat || 'Click on map' }}</p>
-              <p>Longitude: {{ selectedLng || 'Click on map' }}</p>
-            </ion-text>
-          </ion-card-content>
-        </ion-card>
-        <ion-button expand="block" (click)="confirmLocation()" [disabled]="!selectedLat || !selectedLng">
-          Confirm Location
-        </ion-button>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
--->
+</ion-footer> -->
