@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'road-tag',
+  appId: 'com.roadtag.mbl',
+  appName: 'Road Tag',
   webDir: 'www'
 };
 

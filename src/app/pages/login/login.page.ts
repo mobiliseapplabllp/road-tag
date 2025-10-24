@@ -77,11 +77,9 @@ export class LoginPage implements OnInit {
     // }
   }
 
-  changeOtp(ev: any) {
-    console.log(ev);
+  changeOtp(ev: any) {    
     let otp = ev.detail.value;    
-    if (otp.length === 4) {
-      console.log('mat');
+    if (otp.length === 4) {      
       this.otp = otp;
     } else {
       this.otp = '';

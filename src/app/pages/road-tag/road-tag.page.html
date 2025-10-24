@@ -45,9 +45,10 @@
             <section class="inputbox">
               <ion-text color="primary">Sub Division</ion-text>
               <ion-item lines="none">
-                <ion-select placeholder="Sub Division" interface="action-sheet" formControlName="sub_devsn_id" mode="ios">
+                <!-- <ion-select placeholder="Sub Division" interface="action-sheet" formControlName="sub_devsn_id" mode="ios">
                   <ion-select-option *ngFor="let dat of subDivisionArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
-                </ion-select>
+                </ion-select> -->
+                <ion-input type="text" formControlName="sub_devsn_id" placeholder="Sub Division"></ion-input>
               </ion-item>
             </section>
           </ion-col>
@@ -249,9 +250,9 @@
               </ion-item>
             </section>
           </ion-col>
-          <ion-col size="12">
+          <!-- <ion-col size="12">
             <ion-button size="small" (click)="pickImage()" [color]="addForm.value.length_doc_status === '1' ? 'success' : 'primary' " class="ion-text-capitalize">Length Document</ion-button>
-          </ion-col>
+          </ion-col> -->
         </ion-row>
       </ion-card-content>
     </ion-card>

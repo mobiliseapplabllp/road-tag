@@ -65,7 +65,7 @@ export class Api {
   }
 
   addRoad(formData: any): Observable<any> {
-    return this.https.post(environment.url + 'assets/settings/add_road',  formData);
+    return this.https.post(environment.url + 'gis/add-gis',  formData);
   }
 
   getAccessToken(): Observable<string> {

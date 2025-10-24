@@ -1,6 +1,10 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
 :root {
+
+	--ion-safe-area-top: env(safe-area-inset-top);
+  	--ion-safe-area-bottom: env(safe-area-inset-bottom);
+
     --ion-color-primary: #273897;
 	--ion-color-primary-rgb: 39,56,151;
 	--ion-color-primary-contrast: #ffffff;

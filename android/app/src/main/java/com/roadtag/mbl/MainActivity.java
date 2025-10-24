@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.roadtag.mbl;
 
 import com.getcapacitor.BridgeActivity;
 

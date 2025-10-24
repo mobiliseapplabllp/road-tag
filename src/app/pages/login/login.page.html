@@ -54,7 +54,7 @@
         <br>
         <ion-row>
           <ion-col>            
-            <ion-input-otp length="4" (ionInput)="changeOtp($event)"> Didn't get a code? <a href="#">Resend the code</a> </ion-input-otp>            
+            <ion-input-otp length="4" (ionInput)="changeOtp($event)"> Didn't get a code? <a (click)="currentView = 'login' ">Resend the code</a> </ion-input-otp>            
           </ion-col>
         </ion-row>        
         <br>

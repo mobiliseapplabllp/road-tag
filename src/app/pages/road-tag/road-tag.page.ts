@@ -89,24 +89,26 @@ export class RoadTagPage implements OnInit {
     });
   }
 
-
-
   getDistrict() {
-    this.httpApi.getDistrict().subscribe({
-      next:(data: any) => {
-        if(data.status) {
-          this.districtArr = data.data
-        } else {
-          this.common.presentToast(data.msg, 'warning');
+    this.common.presentLoading().then(preLoad => {
+      this.httpApi.getDistrict().subscribe({
+        next:(data: any) => {
+          if(data.status) {
+            this.districtArr = data.data
+          } else {
+            this.common.presentToast(data.msg, 'warning');
+          }
+        },
+        error:() => {
+          this.common.dismissloading();
+          this.common.presentToast(environment.errMsg, 'danger');
+        },
+        complete:() => {
+          this.common.dismissloading();
         }
-      },
-      error:() => {
-
-      },
-      complete:() => {
-
-      }
-    });
+      });  
+    })
+    
   }
 
   getDivision() {
@@ -311,23 +313,49 @@ export class RoadTagPage implements OnInit {
   }
 
   submit() {
-    for (var key in this.addForm.value) {
-      console.log(key);
-      console.log(this.addForm.value[key]);
+    const dateKeys = ['last_treatment_date', 'dlp_expiry', 'next_treatment_date'];
+    for (const key in this.addForm.value) {
       this.formData.delete(key);
-      this.formData.append(key, this.addForm.value[key]);
-    }
-    this.httpApi.addRoad(this.formData).subscribe({
-      next:() => {
-
-      },
-      error:() => {
-
-      },
-      complete:() => {
-
+      let val = this.addForm.value[key] ?? '';
+      if (dateKeys.includes(key) && typeof val === 'string' && val.includes('T')) {
+        val = val.split('T')[0];
       }
-    });
+      this.formData.append(key, val);
+    }
+    // for (var key in this.addForm.value) {     
+    //   this.formData.delete(key); 
+    //   if (key === 'last_treatment_date' || key === 'dlp_expiry' || key === 'next_treatment_date') {        
+    //     let val = this.addForm.value[key];
+    //     if (val) {
+    //       this.formData.append(key, val.split('T')[0] || '');        
+    //     } else {
+    //       this.formData.append(key, '');        
+    //     }
+        
+    //   } else {
+    //     this.formData.append(key, this.addForm.value[key]);
+    //   }            
+    // }
+    this.common.presentLoading().then(preLoad => {
+      this.httpApi.addRoad(this.formData).subscribe({
+        next:(data: any) => {
+          if (data.status) {
+            this.common.presentToast(data.msg, 'success');
+            this.formData = new FormData();
+            this.addForm.reset();
+          } else {
+            this.common.presentToast(data.msg, 'warning');            
+          }
+        },
+        error:() => {
+          this.common.dismissloading();
+          this.common.presentToast(environment.errMsg, 'danger');
+        },
+        complete:() => {
+          this.common.dismissloading();
+        }
+      });  
+    });    
   }
 
   pickImage() {

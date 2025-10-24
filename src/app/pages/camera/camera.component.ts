@@ -24,7 +24,11 @@ cameraActive = false;
   ionViewDidLoad() {}
 
   launchCamera() {    
-    CameraPreview.start({parent: 'content', className: '', width: window.screen.width, height: window.screen.height-150, toBack: false, disableAudio: true, disableExifHeaderStripping: false}).catch(res => {      
+    const footer = document.querySelector('ion-footer') as HTMLElement;
+    const footerHeight = footer ? footer.offsetHeight : 0;
+    const availableHeight = window.innerHeight - footerHeight;
+
+    CameraPreview.start({parent: 'content', className: '', width: window.screen.width, height: availableHeight, toBack: false, disableAudio: true, disableExifHeaderStripping: false}).catch(res => {      
       this.closeModal(null, false);
     });
     this.cameraActive = true;
