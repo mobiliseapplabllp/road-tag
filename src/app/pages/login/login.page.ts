@@ -36,7 +36,8 @@ export class LoginPage implements OnInit {
     const obj = {
       username: this.loginForms.value.username,
       password: this.loginForms.value.password,      
-      source: environment.source
+      source: environment.source,
+      type: 'road-tag'
     }
     this.common.presentLoading().then(preLoad => {
       this.httpApi.loginAuth(obj).subscribe({

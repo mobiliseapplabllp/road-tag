@@ -76,7 +76,7 @@ export class GMapsComponent implements OnInit {
     this.polyline.setMap(this.map);
 
     this.map.addListener('click', (event: any) => this.addMarker(event.latLng));
-    // this.setMarker(lat, lng);
+    this.setMarker(lat, lng);
   }
 
   setMarker(lat: any , long: any) {

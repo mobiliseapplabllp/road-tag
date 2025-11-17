@@ -9,10 +9,11 @@
       <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">
         LOCATION INFO </ion-card-header>
       <ion-card-content>
+        <br>
         <ion-row>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">District</ion-text>
+              <ion-text color="primary">District <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none">
                 <ion-select placeholder="Select District" interface="action-sheet" formControlName="dist_id"
                   mode="ios">
@@ -23,7 +24,7 @@
           </ion-col>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">Division</ion-text>
+              <ion-text color="primary">Division <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none">
                 <ion-select placeholder="Select Division" interface="action-sheet" formControlName="devsn_id" mode="ios" (ionChange)="changeDivision($event)">
                   <ion-select-option *ngFor="let dat of divisionArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
@@ -33,7 +34,7 @@
           </ion-col>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">Ward</ion-text>
+              <ion-text color="primary">Ward <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none">
                 <ion-select placeholder="Select Ward" interface="action-sheet" formControlName="ward_id" mode="ios">
                   <ion-select-option *ngFor="let dat of wardArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
@@ -43,7 +44,7 @@
           </ion-col>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">Sub Division</ion-text>
+              <ion-text color="primary">Sub Division <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none">
                 <!-- <ion-select placeholder="Sub Division" interface="action-sheet" formControlName="sub_devsn_id" mode="ios">
                   <ion-select-option *ngFor="let dat of subDivisionArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
@@ -54,7 +55,7 @@
           </ion-col>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">Area</ion-text>
+              <ion-text color="primary">Area <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none">
                 <ion-input type="text" formControlName="area" placeholder="Enter Area"></ion-input>
               </ion-item>
@@ -110,6 +111,7 @@
       <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">
         IDENTIFICATION & DIMENSION </ion-card-header>
       <ion-card-content>
+        <br>
         <ion-row>
           <ion-col size="6">
             <section class="inputbox">
@@ -173,7 +175,7 @@
           </ion-col>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">Road ID</ion-text>
+              <ion-text color="primary">Road ID <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none">
                 <ion-input type="text" formControlName="road_id" placeholder="Enter Road ID"></ion-input>
               </ion-item>
@@ -215,10 +217,11 @@
       <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">
         PHYSICAL LOCATION & GEOMETRY </ion-card-header>
       <ion-card-content>
+        <br>
         <ion-row>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">Start Point</ion-text>
+              <ion-text color="primary">Start Point <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none" (click)="openModal('start')">
                 <ion-input type="text" formControlName="start_pnt_current_location" placeholder="Start Ponit" readonly></ion-input>
                 <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
@@ -227,7 +230,7 @@
           </ion-col>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">End Point</ion-text>
+              <ion-text color="primary">End Point <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none" (click)="openModal('end')">
                 <ion-input type="text" formControlName="end_pnt_current_location" placeholder="End Point" readonly></ion-input>
                 <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
@@ -262,6 +265,7 @@
       <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">
         MAINTENANCE & VERIFICATION </ion-card-header>
       <ion-card-content>
+        <br>
         <ion-row>
           <ion-col size="6">
             <section class="inputbox">

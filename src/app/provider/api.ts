@@ -29,7 +29,7 @@ export class Api {
   }
 
   getDistrict(): Observable<any> {
-    return this.https.get(environment.url + 'assets/settings/sel_ownership');
+    return this.https.get(environment.url + 'assets/settings/sel_ownership?status=1');
   }
   
   getDivision(): Observable<any> {
@@ -41,7 +41,7 @@ export class Api {
   }
 
   getWard(grp_id: any): Observable<any> {
-    return this.https.get(environment.url + 'assets/settings/sel_asset_fsclass?grp_id=' + grp_id);
+    return this.https.get(environment.url + 'assets/settings/sel_asset_fsclass?grp_id=' + grp_id + '&status=1');
   }
 
   getDepartment(): Observable<any> {
