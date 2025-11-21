@@ -6,6 +6,7 @@ import { GMapsComponent } from 'src/app/g-maps/g-maps.component';
 import { Api } from 'src/app/provider/api';
 import { Common } from 'src/app/provider/common/common';
 import { environment } from 'src/environments/environment';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-road-tag',
@@ -27,6 +28,9 @@ export class RoadTagPage implements OnInit {
   lastTreatArr: any = [];
 
   formData = new FormData();
+
+  startObj: any = [];
+  endObj: any = [];
   constructor(
     private formBuilder: FormBuilder,
     private modalCtrl: ModalController,
@@ -280,11 +284,16 @@ export class RoadTagPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: GMapsComponent,
       cssClass: 'my-modal',      
+      componentProps :{ 
+        data: type === 'start' ? this.startObj : type === 'end' ? this.endObj : [],
+        type: type
+      }
     });
     modal.onWillDismiss().then(disModal => {
       if (disModal.role === 'true') {
         console.log(disModal);
-        if (type === 'start') {                    
+        if (type === 'start') {  
+          this.startObj = disModal.data;                  
           this.formData.delete('start_pnt_picture_1');
           this.formData.delete('start_pnt_picture_2');
           this.formData.delete('start_pnt_picture_3');
@@ -295,7 +304,8 @@ export class RoadTagPage implements OnInit {
           this.formData.append('start_pnt_picture_2', disModal.data.image2, disModal.data.image2Name);
           this.formData.append('start_pnt_picture_3', disModal.data.image3, disModal.data.image3Name);
           this.formData.append('start_pnt_picture_4', disModal.data.image4, disModal.data.image4Name);
-        } else if (type === 'end') {          
+        } else if (type === 'end') {   
+          this.endObj = disModal.data;       
           this.formData.delete('end_pnt_picture_1');
           this.formData.delete('end_pnt_picture_2');
           this.formData.delete('end_pnt_picture_3');
@@ -310,7 +320,7 @@ export class RoadTagPage implements OnInit {
       }
     });
     modal.present();
-  }
+  }  
 
   submit() {
     const dateKeys = ['last_treatment_date', 'dlp_expiry', 'next_treatment_date'];
@@ -342,6 +352,8 @@ export class RoadTagPage implements OnInit {
           if (data.status) {
             this.common.presentToast(data.msg, 'success');
             this.formData = new FormData();
+            this.startObj = {};
+            this.endObj = {};
             this.addForm.reset();
           } else {
             this.common.presentToast(data.msg, 'warning');            
@@ -387,4 +399,7 @@ export class RoadTagPage implements OnInit {
     });
   }
   
+  openRoute() {
+    this.router.navigateByUrl('/road-update');
+  }
 }

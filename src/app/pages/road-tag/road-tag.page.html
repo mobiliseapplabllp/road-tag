@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Add Road</ion-title>
+    <ion-title (click)="openRoute()">Add Road</ion-title>
+    <!-- <ion-buttons slot="end">
+      <ion-button (click)="openRoute()">Update</ion-button>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -34,6 +37,14 @@
           </ion-col>
           <ion-col size="6">
             <section class="inputbox">
+              <ion-text color="primary">Sub Division <ion-text color="danger">*</ion-text> </ion-text>
+              <ion-item lines="none">                
+                <ion-input type="text" formControlName="sub_devsn_id" placeholder="Sub Division"></ion-input>
+              </ion-item>
+            </section>
+          </ion-col>
+          <ion-col size="6">
+            <section class="inputbox">
               <ion-text color="primary">Ward <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none">
                 <ion-select placeholder="Select Ward" interface="action-sheet" formControlName="ward_id" mode="ios">
@@ -41,18 +52,7 @@
                 </ion-select>
               </ion-item>
             </section>
-          </ion-col>
-          <ion-col size="6">
-            <section class="inputbox">
-              <ion-text color="primary">Sub Division <ion-text color="danger">*</ion-text> </ion-text>
-              <ion-item lines="none">
-                <!-- <ion-select placeholder="Sub Division" interface="action-sheet" formControlName="sub_devsn_id" mode="ios">
-                  <ion-select-option *ngFor="let dat of subDivisionArr" [value]="dat.value">{{dat.label}}</ion-select-option>                  
-                </ion-select> -->
-                <ion-input type="text" formControlName="sub_devsn_id" placeholder="Sub Division"></ion-input>
-              </ion-item>
-            </section>
-          </ion-col>
+          </ion-col>          
           <ion-col size="6">
             <section class="inputbox">
               <ion-text color="primary">Area <ion-text color="danger">*</ion-text> </ion-text>
@@ -191,7 +191,7 @@
           </ion-col>
           <ion-col size="6">
             <section class="inputbox">
-              <ion-text color="primary">Road Catgory</ion-text>
+              <ion-text color="primary">Road Category</ion-text>
               <ion-item lines="none">
                 <ion-select placeholder="Select Category" interface="action-sheet" formControlName="road_category"
                   mode="ios">
@@ -223,7 +223,7 @@
             <section class="inputbox">
               <ion-text color="primary">Start Point <ion-text color="danger">*</ion-text> </ion-text>
               <ion-item lines="none" (click)="openModal('start')">
-                <ion-input type="text" formControlName="start_pnt_current_location" placeholder="Start Ponit" readonly></ion-input>
+                <ion-input type="text" formControlName="start_pnt_current_location" placeholder="Start Point" readonly></ion-input>
                 <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
               </ion-item>
             </section>
@@ -252,10 +252,7 @@
                 <ion-input type="text" formControlName="road_id" placeholder="Enter Length"></ion-input>
               </ion-item>
             </section>
-          </ion-col>
-          <!-- <ion-col size="12">
-            <ion-button size="small" (click)="pickImage()" [color]="addForm.value.length_doc_status === '1' ? 'success' : 'primary' " class="ion-text-capitalize">Length Document</ion-button>
-          </ion-col> -->
+          </ion-col>          
         </ion-row>
       </ion-card-content>
     </ion-card>
@@ -270,8 +267,7 @@
           <ion-col size="6">
             <section class="inputbox">
               <ion-text color="primary">Last Treatment Type</ion-text>
-              <ion-item lines="none">
-                <!-- <ion-input type="text" formControlName="road_id" placeholder="Last Treatment Type"></ion-input> -->
+              <ion-item lines="none">                
                 <ion-select placeholder="Treatment Type" interface="action-sheet" formControlName="last_treatment_type" mode="ios">
                   <ion-select-option *ngFor="let dat of lastTreatArr" [value]="dat.id">{{dat.warranty}}</ion-select-option>                  
                 </ion-select>
@@ -337,376 +333,10 @@
         </ion-row>
       </ion-card-content>
     </ion-card>
-  </form>
-  <!-- 
-  <ion-item lines="none" id="add_last_treatment_date">
-            <ion-input type="text" [value]="addForm.value.last_treatment_date | date: 'dd/MM/yyyy'"
-              placeholder="Select Date" readonly>
-            </ion-input>
-            <ion-popover trigger="add_last_treatment_date" mode="md">
-              <ng-template>
-                <ion-datetime #popoverDatetime max="2099" presentation="date" size="cover"
-                  formControlName="last_treatment_date" [showDefaultButtons]="true">
-                </ion-datetime>
-              </ng-template>
-            </ion-popover>
-             -->
+  </form>  
 </ion-content>
 <ion-footer>
   <ion-toolbar style="padding-left:10px;padding-right: 10px;">
     <ion-button mode="md" expand="block" class="ion-text-capitalize" (click)="submit()">Submit <ion-icon name="arrow-forward-outline" slot="end"></ion-icon> </ion-button>
   </ion-toolbar>
 </ion-footer>
-<!-- <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title >Road Add</ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="outline" (click)="updateRoad('/road-update')">
-        <ion-icon name="push-outline"></ion-icon> Update Tag
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <form [formGroup]="addForm" (ngSubmit)="submitForm()">
-    <ion-card>
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)"> LOCATION INFO </ion-card-header>
-      <ion-card-content>
-        <br>
-        <section class="inputbox">
-          <ion-text color="primary">Road ID <ion-text color="danger">*</ion-text> </ion-text>
-          <ion-item lines="none">
-            <ion-input type="text" formControlName="road_id" placeholder="Enter Road ID"></ion-input>
-            <ion-button slot="end" fill="outline" (click)="verifyId()">Verify</ion-button>
-          </ion-item>
-          <ion-text color="primary">UR ID <ion-text color="danger">*</ion-text></ion-text>
-          <ion-item lines="none">
-            <ion-input type="text" formControlName="ur_id" placeholder="Enter UR ID"></ion-input>
-          </ion-item>
-          <ion-text color="primary">Road Name</ion-text>
-          <ion-item lines="none" class="dsble" color="none"> 
-            <ion-input type="text" formControlName="road_name" placeholder="Enter Road Name" readonly></ion-input>
-          </ion-item>
-          <ion-text color="primary">Source <ion-text color="danger">*</ion-text></ion-text>
-          <ion-item lines="none">
-            <ion-select interface="action-sheet" placeholder="Select" formControlName="source" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-              <ion-select-option>3</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </section>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
-        Location & Geometry
-      </ion-card-header>
-      <ion-card-content>
-        <br>
-        <section class="inputbox">
-          <ion-text color="primary">Start Point Lat/Long</ion-text>
-          <ion-row>
-            <ion-col>
-              <ion-item lines="none"  class="dsble" color="none">
-                <ion-input type="text" placeholder="Lat" formControlName="start_point_lat" readonly></ion-input>
-              </ion-item>
-            </ion-col>
-            <ion-col >
-              <ion-item lines="none" class="dsble" color="none">
-                <ion-input type="text" placeholder="Long" formControlName="start_point_long" readonly></ion-input>
-              </ion-item>
-            </ion-col>            
-          </ion-row>
-          <ion-text color="primary">End Point Lat/Long</ion-text>
-          <ion-row>
-            <ion-col>
-              <ion-item lines="none" class="dsble" color="none">
-                <ion-input type="text" placeholder="Lat" formControlName="end_point_lat" readonly></ion-input>
-              </ion-item>
-            </ion-col>
-            <ion-col>
-              <ion-item lines="none" class="dsble" color="none">
-                <ion-input type="text" placeholder="Long" formControlName="end_point_long" readonly></ion-input>
-              </ion-item>
-            </ion-col>            
-          </ion-row>
-          <ion-text color="primary">GIS Length</ion-text>
-          <ion-item lines="none">
-            <ion-input type="text" formControlName="gis_length" placeholder="Enter GIS Length"></ion-input>
-          </ion-item>
-          <ion-text color="primary">Length</ion-text>
-          <ion-item lines="none">
-            <ion-input type="text" formControlName="length" placeholder="Length"></ion-input>
-          </ion-item>
-          <ion-text color="primary">Length Documentation</ion-text>
-          <ion-item lines="none">
-            <ion-select interface="action-sheet" placeholder="Select" formControlName="length_doc" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-              <ion-select-option>3</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </section>
-      </ion-card-content>
-    </ion-card>
-    <ion-card >
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
-        Photo Evidence
-      </ion-card-header>
-      <ion-card-content>
-        <br>
-        <section class="inputbox">          
-          <ion-row>
-            <ion-col>              
-              <ion-button expand="block" [color]="startPhoto ?'success' : 'primary'"> {{ startPhoto ? 'Photo Added' : 'Start Photo' }} <ion-icon [name]=" startPhoto ? 'eye-outline' : 'image-outline'" slot="end"></ion-icon></ion-button>
-            </ion-col>
-            <ion-col>              
-              <ion-button expand="block" [color]="endPhoto ?'success' : 'primary'"> {{ endPhoto ? 'Photo Added' : 'End Photo' }} <ion-icon [name]=" endPhoto ? 'eye-outline' : 'image-outline'" slot="end"></ion-icon></ion-button>
-            </ion-col>
-          </ion-row>
-        </section>
-      </ion-card-content>
-
-    </ion-card>
-    <ion-card>
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
-        Administrative & Jurisidiction
-      </ion-card-header>
-      <ion-card-content>
-        <br>
-        <section class="inputbox">
-          <ion-text color="primary">Department/ULB</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="department_ulb" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Location/Locality</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="location_locality" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Ward</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="ward" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Circle</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="circle" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Division</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="division" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">District</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="district" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Lok Sabha Constituency</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="lok_sabha_cons" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Vidhan Sabha Constituency</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="vidhan_sabha_cons" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </section>
-      </ion-card-content>
-    </ion-card>
-    <ion-card >
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
-        Dimensions & Engineering
-      </ion-card-header>
-      <ion-card-content>
-        <br>
-        <section class="inputbox">
-          <ion-text color="primary">Right of Way (RD-wise)</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="right_way_rd_wise" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Carriageway Width (RD-wise)</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="carriageway_width_rd_wise" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Width</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="dimension_width" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Width Category</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="dimension_width_cat" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Existing Road Crust</ion-text>
-          <ion-item lines="none">
-            <ion-input type="text" formControlName="road_crust" placeholder="Existing Road Crust"></ion-input>
-          </ion-item>
-        </section>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
-        Classification
-      </ion-card-header>
-      <ion-card-content>
-        <br>
-        <section class="inputbox">
-          <ion-text color="primary">Road Category</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="road_category" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Area Typology</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="area_topology" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </section>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
-        Maintenance Lifecycle
-      </ion-card-header>
-      <ion-card-content>
-        <br>
-        <section class="inputbox">
-          <ion-text color="primary">Last Treatment Type</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="last_treatment_type" mode="ios">
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Last Treatment Date</ion-text>
-          <ion-item lines="none" id="add_last_treatment_date">
-            <ion-input type="text" [value]="addForm.value.last_treatment_date | date: 'dd/MM/yyyy'"
-              placeholder="Select Date" readonly>
-            </ion-input>
-            <ion-popover trigger="add_last_treatment_date" mode="md">
-              <ng-template>
-                <ion-datetime #popoverDatetime max="2099" presentation="date" size="cover"
-                  formControlName="last_treatment_date" [showDefaultButtons]="true">
-                </ion-datetime>
-              </ng-template>
-            </ion-popover>
-            <ion-icon slot="end" name="calendar-outline"></ion-icon>
-          </ion-item>
-
-          <ion-row>
-            <ion-col>
-              <ion-text color="primary">DLP Expiry</ion-text>
-              <ion-item lines="none" id="dlp_expiry">
-                <ion-input type="text" [value]="addForm.value.dlp_expiry_date | date: 'dd/MM/yyyy'"
-                  placeholder="Select Date" readonly>
-                </ion-input>
-                <ion-popover trigger="dlp_expiry" mode="md">
-                  <ng-template>
-                    <ion-datetime #popoverDatetime max="2099" presentation="date" size="cover"
-                      formControlName="dlp_expiry_date" [showDefaultButtons]="true">
-                    </ion-datetime>
-                  </ng-template>
-                </ion-popover>
-                <ion-icon slot="end" name="calendar-outline"></ion-icon>
-              </ion-item>
-            </ion-col>
-            <ion-col>
-              <ion-text color="primary">Next Treatment Due</ion-text>
-              <ion-item lines="none" id="next_treatment_due">
-                <ion-input type="text" [value]="addForm.value.next_treatment_due | date: 'dd/MM/yyyy'"
-                  placeholder="Select Date" readonly>
-                </ion-input>
-                <ion-popover trigger="next_treatment_due" mode="md">
-                  <ng-template>
-                    <ion-datetime #popoverDatetime max="2099" presentation="date" size="cover"
-                      formControlName="next_treatment_due" [showDefaultButtons]="true">
-                    </ion-datetime>
-                  </ng-template>
-                </ion-popover>
-                <ion-icon slot="end" name="calendar-outline"></ion-icon>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </section>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-header style="font-size:18px;border-bottom:1px solid rgb(228, 221, 221);color:var(--ion-color-primary)">        
-        Varification & QA
-      </ion-card-header>
-      <ion-card-content>
-        <br>
-        <section class="inputbox">
-          <ion-text color="primary">Varification Status</ion-text>
-          <ion-item lines="none">
-            <ion-select placeholder="select" interface="action-sheet" formControlName="varification_sts" >
-              <ion-select-option>1</ion-select-option>
-              <ion-select-option>2</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-text color="primary">Remark</ion-text>
-          <ion-item lines="none">
-            <ion-textarea rows="5" placeholder="Enter text here..." formControlName="remark"></ion-textarea>
-          </ion-item>
-        </section>
-      </ion-card-content>
-    </ion-card>    
-  </form>
-</ion-content>
-<ion-footer>
-  <ion-toolbar style="padding-left: 8px;padding-right:8px">
-    <ion-button expand="block" type="submit" class="ion-text-capitalize" [disabled]="addForm.invalid"> Road Add <ion-icon name="add-outline" slot="end"></ion-icon> </ion-button>
-  </ion-toolbar>
-</ion-footer> -->

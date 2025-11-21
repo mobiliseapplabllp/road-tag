@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { ModalComponent } from '../modal/modal.component';
-import { Camera, CameraResultType } from '@capacitor/camera';
-import { ToastController } from '@ionic/angular';
-import { GMapsComponent } from 'src/app/g-maps/g-maps.component';
-import { Api } from 'src/app/provider/api';
+import { Platform } from '@ionic/angular';
+import { BackgroundGeolocation } from "@capgo/background-geolocation";
+import { Geolocation } from '@capacitor/geolocation';
 
+declare var google: any;
 @Component({
   selector: 'app-road-update',
   templateUrl: './road-update.page.html',
@@ -15,137 +11,210 @@ import { Api } from 'src/app/provider/api';
   standalone: false
 })
 export class RoadUpdatePage implements OnInit {
-  updateRoadForm!: FormGroup
-  photos: { start?: string; end?: string } = {};
-  startPhoto: any = '';
-  endPhoto: any = '';
-  constructor(
-    private formBuilder: FormBuilder,
-    private modal: ModalController,
-    private router: Router,
-    private toast: ToastController,
-    private modalCtrl: ModalController,
-    private httpApi: Api
-  ) { }
+  map: any;
+  polyline: any;
 
-  ngOnInit() {
-    this.initialForm();
-    // this.getApi();
-  }
+  allPoints: any[] = [{
+    lat: 28.452409465547913, 
+    lng: 77.04256236082655
+  }, {
+    lat: 28.45644668400078, 
+    lng: 77.04636036879019
+  }, {
+    lat: 28.46035169725649, 
+    lng: 77.05017983442617
+  }];
+  startPoint: any = null;
+  endPoint: any = null;
 
-  // getApi() {    
-  //   this.httpApi.getDirections('28.510543263855247, 77.29847171803526', '28.511042862603688, 77.29824246473908').subscribe();
-  // }
+  markers: any[] = [];
+  circles: any[] = [];
 
-  initialForm() {
-    this.updateRoadForm = this.formBuilder.group({
-      road_iD: ['', [Validators.required]],
-      start_point_lat: [''],
-      start_point_long: [''],
-      start_address: [''], 
-      end_point_lat: [''],
-      end_point_long: [''],
-      startPhoto: [''],
-      endPhoto: [''],
-      end_address: [''], 
-      road_name: [''],
-     
-    })
-  }
-  submitForm() {
-    if (!this.updateRoadForm.valid) {      
-      this.updateRoadForm.markAllAsTouched();
-      this.showToast('Fill the required field', 'danger')
-      return;
-    }
-    const formData = this.updateRoadForm.value;
-    formData.road_id = formData.road_iD;
-    delete formData.road_iD;
-    localStorage.setItem('updatedFormData', JSON.stringify(formData));
-    console.log('Form data saved in local storage');
-  }
+  currentStatus = '';
 
-  async openModal() {
-    const modal = await this.modalCtrl.create({
-      component: GMapsComponent,
-      cssClass: 'my-modal',
-    });
-    modal.onWillDismiss().then(disModal => {
-      if (disModal.role) {
-        console.log(disModal);        
-      }
-    });
-    modal.present();
-  }
+  constructor(private platform: Platform) {}
 
-  // async openMap(pointType: 'start' | 'end') {
-  //   const currentLat = pointType === 'start'
-  //     ? this.updateRoadForm.get('start_point_lat')?.value
-  //     : this.updateRoadForm.get('end_point_lat')?.value
-    
-  //   const currentLng = pointType === 'start'
-  //     ? this.updateRoadForm.get('start_point_long')?.value
-  //     : this.updateRoadForm.get('end_point_long')?.value
-
-  //   const currentAdd = this.updateRoadForm.get('address')?.value;  
-  //   const modal = await this.modal.create({
-  //     component: ModalComponent,
-  //     componentProps: {
-  //       pointType: pointType,
-  //       lat: currentLat,
-  //       lng: currentLng,
-  //       address:currentAdd,
-  //     }
-  //   });
-  //   await modal.present();
-  //   const { data } = await modal.onWillDismiss();
-  //   if (data) {
-  //     if (pointType === 'start') {
-  //       this.updateRoadForm.patchValue({
-  //         start_point_lat: data.lat,
-  //         start_point_long: data.lng,
-  //         start_address: data.address
-  //       });
-  //     } else {
-  //       this.updateRoadForm.patchValue({
-  //         end_point_lat: data.lat,
-  //         end_point_long: data.lng,
-  //         end_address: data.address
-  //       });
-  //     }
-  //   }
-  // }
-  
-  async photo(type: 'start' | 'end') {
-    try {
-      const image = await Camera.getPhoto({
-        quality: 60,
-        allowEditing: true,
-        width: 800,
-        height: 600,
-        resultType: CameraResultType.DataUrl
-      });
-      const photoData = image.dataUrl;
-      if (type === 'start') {
-        this.updateRoadForm.patchValue({ startPhoto: photoData });
-        this.startPhoto = true
-      } else {
-        this.updateRoadForm.patchValue({ endPhoto: photoData });
-        this.endPhoto = true
-      }
-      console.log('Photo captured:', type);
-    } catch (err) {
-      console.error('Camera error:', err);
+  ngOnInit(): void {
+    if (this.platform.is('capacitor')) {
+      this.getLocation();
+    } else {
+      this.initMap(28.446189750840446, 77.30811111326851);
+      this.addInitialMarker(28.446189750840446, 77.30811111326851);                  
     }
   }
 
-  async showToast(message: string, color: 'success' | 'danger') {
-    const toast = await this.toast.create({
-      message,
-      color,
-      duration: 3000,
-      position: 'bottom',
+  // ============================
+  // 1️⃣ App Open → Initial Location Marker (BLUE)
+  // ============================
+  async getLocation() {
+    const current = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true
     });
-    await toast.present();
+
+    this.initMap(current.coords.latitude, current.coords.longitude);
+
+    // BLUE marker = Initial
+    this.addInitialMarker(current.coords.latitude, current.coords.longitude);
+  }
+
+  initMap(lat: any, lng: any) {
+    this.map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 16,
+      center: { lat, lng },
+      mapTypeId: "roadmap"
+    });
+
+    this.polyline = new google.maps.Polyline({
+      path: [],
+      geodesic: true,
+      strokeColor: "#0000FF",
+      strokeOpacity: 1.0,
+      strokeWeight: 3
+    });
+
+    this.polyline.setMap(this.map);
+  }
+
+  // BLUE MARKER (initial)
+  addInitialMarker(lat: any, lng: any) {
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map: this.map,
+      icon: "https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png",
+      title: "Current Location"
+    });
+
+    this.markers.push(marker);
+  }
+
+  // GREEN START MARKER
+  addStartMarker(point: any) {
+    const marker = new google.maps.Marker({
+      position: point,
+      map: this.map,
+      label: "S",
+      icon: {
+        url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+      }
+    });
+
+    this.markers.push(marker);
+  }
+
+  // RED END MARKER
+  addEndMarker(point: any) {
+    const marker = new google.maps.Marker({
+      position: point,
+      map: this.map,
+      label: "E",
+      icon: {
+        url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+      }
+    });
+
+    this.markers.push(marker);
+  }
+
+  // RED SMALL DOT for each live update
+  addLiveDot(lat: any, lng: any) {
+    const circle = new google.maps.Circle({
+      strokeWeight: 1,
+      fillColor: "red",
+      fillOpacity: 1,
+      map: this.map,
+      center: { lat, lng },
+      radius: 2
+    });
+
+    this.circles.push(circle);
+  }
+
+  // ============================
+  // 2️⃣ START TRACKING
+  // ============================
+  async startTracking() {
+
+    this.allPoints = [];
+
+    const current = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true
+    });
+
+    this.startPoint = {
+      lat: current.coords.latitude,
+      lng: current.coords.longitude,
+      timestamp: new Date().toISOString()
+    };
+
+    this.currentStatus = 'start';
+
+    this.allPoints.push(this.startPoint);
+
+    // GREEN Start Marker
+    this.addStartMarker(this.startPoint);
+
+    // Background tracking
+    BackgroundGeolocation.start(
+      {
+        backgroundMessage: "Tracking you...",
+        backgroundTitle: "Road Tagging Active",
+        requestPermissions: true,
+        distanceFilter: 5
+      },
+      (location: any, error: any) => {
+        if (error) return;
+
+        const point = {
+          lat: location.latitude,
+          lng: location.longitude,
+          timestamp: new Date().toISOString()
+        };
+
+        this.allPoints.push(point);
+
+        // RED DOT on map
+        this.addLiveDot(point.lat, point.lng);
+
+        console.log("BG Point:", point);
+      }
+    );
+  }
+
+  // ============================
+  // 3️⃣ STOP TRACKING → END MARKER + POLYLINE
+  // ============================
+  async stopTracking() {
+    BackgroundGeolocation.stop();
+
+    const last = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true
+    });
+
+    this.endPoint = {
+      lat: last.coords.latitude,
+      lng: last.coords.longitude,
+      timestamp: new Date().toISOString()
+    };
+
+    this.allPoints.push(this.endPoint);
+
+    // RED END marker
+    this.addEndMarker(this.endPoint);
+
+    // Polyline
+    this.drawPolyline();
+  }
+
+  // ============================
+  // 4️⃣ Draw Polyline + adjust map
+  // ============================
+  drawPolyline() {
+    const path = this.allPoints.map((p) => ({ lat: p.lat, lng: p.lng }));
+
+    this.polyline.setPath(path);
+
+    const bounds = new google.maps.LatLngBounds();
+    path.forEach((p) => bounds.extend(p));
+    this.map.fitBounds(bounds);
   }
 }

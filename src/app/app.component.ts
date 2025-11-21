@@ -31,7 +31,7 @@ export class AppComponent {
       try {
         await StatusBar.setOverlaysWebView({ overlay: false }); // content not under status bar
         await StatusBar.setStyle({ style: Style.Default }); // or Style.Dark
-        await StatusBar.setBackgroundColor({ color: '#ffffff' }); // set your app background color
+        await StatusBar.setBackgroundColor({ color: '#273897' }); // set your app background color
       } catch (err) {
         console.log('StatusBar init error:', err);
       }

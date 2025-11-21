@@ -1,9 +1,10 @@
 import { Component, NgZone, OnInit } from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 import { Api } from '../provider/api';
 import { environment } from 'src/environments/environment';
 import { Common } from '../provider/common/common';
+import { ModalComponent } from '../pages/modal/modal.component';
 
 declare var google: any;
 
@@ -26,26 +27,32 @@ export class GMapsComponent implements OnInit {
   isModalOpen = false;
   distanceArr: any = {};
   finalData: any = {};
+  data: any;
+  type!: string;
   constructor(
-    private modalCtrl: ModalController, 
+    private modalCtrl: ModalController,
     private zone: NgZone,
     private httpApi: Api,
     private platform: Platform,
-    private common: Common
+    private common: Common,
+    private alertController: AlertController
   ) { }
 
   ngOnInit() {
-    setTimeout(() => {               
+    console.log(this.type);
+    console.log(this.data);
+
+    setTimeout(() => {
       if (typeof google !== 'undefined' && google.maps && google.maps.places) {
         this.autocompleteService = new google.maps.places.AutocompleteService();
       } else {
         console.error('Google Maps JS not loaded yet!');
       }
       this.geocoder = new google.maps.Geocoder();
-    }, 1000);    
+    }, 1000);
     if (this.platform.is('capacitor')) {
       this.getLocation();
-    } else {      
+    } else {
       let lat, lng
       lat = 28.385628931475292;
       lng = 77.26940318293042;
@@ -54,7 +61,7 @@ export class GMapsComponent implements OnInit {
   }
 
   async getLocation() {
-    await Geolocation.getCurrentPosition({enableHighAccuracy: true}).then((res: any) => {
+    await Geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((res: any) => {
       let lat, lng;
       // console.log(lat, lng);
       lat = res.coords.latitude;
@@ -77,21 +84,72 @@ export class GMapsComponent implements OnInit {
 
     this.map.addListener('click', (event: any) => this.addMarker(event.latLng));
     this.setMarker(lat, lng);
+    if (this.data.startLatLng) {
+      this.addMarker(new google.maps.LatLng(this.data.startLatLng.lat, this.data.startLatLng.lng));
+      this.finalData.image1 = this.data.image1;
+      this.finalData.image2 = this.data.image2;
+      this.finalData.image3 = this.data.image3;
+      this.finalData.image4 = this.data.image4;
+
+      this.finalData.image1Name = this.data.image1Name;
+      this.finalData.image2Name = this.data.image2Name;
+      this.finalData.image3Name = this.data.image3Name;
+      this.finalData.image4Name = this.data.image4Name;
+    }
   }
 
-  setMarker(lat: any , long: any) {
+  async openPhoto(photo: any, type: 'base64' | 'blob') {
+    const modal = await this.modalCtrl.create({
+      component: ModalComponent,
+      componentProps: {
+        photo: photo,
+        type: type
+      }
+    });
+    modal.present();
+  }
+
+  async presentAlertConfirm(index: number) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Remove?',
+      message: 'Do you want to Remove this Leave?',
+      buttons: [{
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+
+        }
+      }, {
+        text: 'Yes',
+        handler: () => {
+          this.removeImage(index);
+        }
+      }]
+    });
+    await alert.present();
+  }
+
+  removeImage(index: number) {
+    this.finalData[`image${index}`] = '';
+    this.finalData[`image${index}Name`] = '';
+  }
+
+  setMarker(lat: any, long: any) {
     const position = new google.maps.LatLng(lat, long);
     const marker = new google.maps.Marker({ position, title: 'Mobilise' });
     marker.setMap(this.map);
   }
 
   addMarker(latLng: any) {
+    console.log(latLng);
     if (this.startMarker) this.startMarker.setMap(null);
     this.startMarker = new google.maps.Marker({
       position: latLng,
       map: this.map,
-      label: 'Start',
-      icon: 'assets/green-dot.png'
+      label: this.type === 'start' ? 'S' : 'E',
+      icon: this.type === 'start' ? 'assets/green-dot.png' : 'assets/red-dot.png'
     });
     this.startLatLng = latLng.toJSON();
     // this.startLatLng = latLng.toJSON();
@@ -146,7 +204,7 @@ export class GMapsComponent implements OnInit {
     });
   }
 
-  save() {    
+  save() {
     if (!this.finalData.image1) {
       this.common.presentToast('Please Upload Image 1', 'warning');
     } else if (!this.finalData.image2) {
@@ -162,7 +220,7 @@ export class GMapsComponent implements OnInit {
       console.log(this.finalData);
       this.closeModal(this.finalData, 'true');
     }
-    
+
   }
 
   pickImage(val: any) {
@@ -205,40 +263,40 @@ export class GMapsComponent implements OnInit {
     });
   }
 
-  confirmModal() {    
+  confirmModal() {
     if (!this.startLatLng) {
-      alert('Please Select Start Location');      
+      alert('Please Select Start Location');
       return;
     }
     if (!this.endLatLng) {
       alert('Please Select End Location');
       return;
-    }    
-    let startLatLng, endLatLng; 
+    }
+    let startLatLng, endLatLng;
     startLatLng = this.startLatLng.lat + ',' + this.startLatLng.lng;
     endLatLng = this.endLatLng.lat + ',' + this.endLatLng.lng;
     this.getApi(startLatLng, endLatLng);
     this.isModalOpen = true;
   }
 
-  getApi(startLatLng: string, endLatLng: string) {    
+  getApi(startLatLng: string, endLatLng: string) {
     this.httpApi.presentLoading().then(preLoad => {
       this.httpApi.getDirections(startLatLng, endLatLng).subscribe({
-        next:(data: any) => {
+        next: (data: any) => {
           if (data.status === 'SUCCESS') {
-            this.distanceArr = data.routes[0].legs[0];                        
+            this.distanceArr = data.routes[0].legs[0];
           }
         },
-        error:() => {
+        error: () => {
           this.httpApi.dismissloading();
           this.httpApi.presentToast(environment.errMsg, 'danger');
         },
-        complete:() => {
+        complete: () => {
           this.httpApi.dismissloading();
         }
       });
     })
-    
+
   }
 
 
@@ -252,9 +310,9 @@ export class GMapsComponent implements OnInit {
     //   end: this.endLatLng
     // });
   }
-  
+
   onWillDismiss() {
-    this.isModalOpen = false; 
+    this.isModalOpen = false;
   }
 
   submit() {
@@ -267,7 +325,7 @@ export class GMapsComponent implements OnInit {
       end_lat: this.endLatLng.lat,
       end_lng: this.endLatLng.lng,
       readable_distance: this.distanceArr.readable_distance,
-      readable_duration: this.distanceArr.readable_duration,      
+      readable_duration: this.distanceArr.readable_duration,
     }
     console.log(finalSubmit);
     this.isModalOpen = false;
